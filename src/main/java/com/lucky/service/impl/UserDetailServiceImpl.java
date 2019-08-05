@@ -1,8 +1,3 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/2 11:31
- */
 package com.lucky.service.impl;
 
 import com.lucky.dao.UserDetailDao;
@@ -13,6 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @Description 用户详细信息管理的服务类，包括用户详细信息的增删改查。
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/2 11:31
+ */
 @Service
 public class UserDetailServiceImpl implements UserDetailService {
 

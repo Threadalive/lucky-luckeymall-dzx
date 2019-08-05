@@ -1,8 +1,3 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/1 15:48
- */
 package com.lucky.dao.impl;
 
 import com.lucky.dao.UserDao;
@@ -14,8 +9,17 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @Description 用于操作用户基本信息表的dao层，包括添加、
+ * 删除、更新和获取用户。
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/1 15:48
+ */
 @Repository
 public class UserDaoImpl implements UserDao {
+    /**
+     * Hibernate中的session工厂，用于获取会话创建查询。
+     */
     @Resource
     private SessionFactory sessionFactory;
 
@@ -30,6 +34,7 @@ public class UserDaoImpl implements UserDao {
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0, nameOrEmail);
         if(query.uniqueResult() == null){
+            //若通过邮箱查询不到用户，则使用用户名再次查询
             hql = "from User where userName=?";
             query = sessionFactory.getCurrentSession().createQuery(hql);
             query.setParameter(0, nameOrEmail);

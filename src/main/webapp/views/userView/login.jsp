@@ -14,7 +14,7 @@
     <title>LuckyMall</title>
 </head>
 <body>
-<form id="loginForm">
+<form id="loginForm" onsubmit="return false">
     <div class="container-fluid" style="padding-top: 80px;padding-bottom: 80px" >
         <h1 class="title center">登录</h1>
         <br/>

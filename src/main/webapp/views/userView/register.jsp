@@ -159,7 +159,7 @@
                 else
                     error.appendTo(element.parent().parent().next());
             },
-            errorElement: "div",
+            errorElement: "span",
             rules: {
                 userName: {
                     required: true,

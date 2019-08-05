@@ -1,8 +1,3 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/2 22:16
- */
 package com.lucky.dao.impl;
 
 import com.lucky.dao.UserDetailDao;
@@ -14,9 +9,18 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @Description 用于操作用户细节信息表的dao层，包括添加、
+ * 删除、更新和获取用户。
+ *
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/2 22:16
+ */
 @Repository
 public class UserDetailDaoImpl implements UserDetailDao {
-
+    /**
+     * Hibernate中的session工厂，用于获取会话创建查询。
+     */
     @Resource
     private SessionFactory sessionFactory;
 

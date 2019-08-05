@@ -12,12 +12,33 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "t_products")
 public class Product {
+    /**
+     * 产品id
+     */
     private int id;
+    /**
+     * 产品名
+     */
     private String productName;
+    /**
+     * 商品描述
+     */
     private String description;
+    /**
+     * 商品关键字
+     */
     private String keyWord;
+    /**
+     * 商品价格
+     */
     private BigDecimal price;
+    /**
+     * 商品库存
+     */
     private int counts;
+    /**
+     * 商品类型
+     */
     private int type;
 
     @Id

@@ -12,14 +12,41 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_user_detail")
 public class UserDetail {
+    /**
+     * 用户id
+     */
     private int id;
+    /**
+     * 用户密码
+     */
     private String password;
+    /**
+     * 用户电话号码
+     */
     private String phoneNumber;
+    /**
+     * 用户性别
+     */
     private int sex;
+    /**
+     * 用户生日
+     */
     private String birthday;
+    /**
+     * 用户邮政编码
+     */
     private String postNumber;
+    /**
+     * 用户地址
+     */
     private String address;
+    /**
+     * 用户注册时间
+     */
     private String registerTime;
+    /**
+     * 用户积分
+     */
     private int score;
 
     @Id

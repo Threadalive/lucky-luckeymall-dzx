@@ -1,8 +1,3 @@
-/**
- * @Description 用户主体信息实体类
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/1 15:24
- */
 package com.lucky.entity;
 
 
@@ -10,14 +5,37 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+/**
+ * @Description 用户主体信息实体类
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/1 15:24
+ */
 @Entity
 @Table(name = "t_user_main")
 public class User {
+    /**
+     * 用户id
+     */
     private int id;
+    /**
+     * 用户名
+     */
     private String userName;
+    /**
+     * 用户邮箱
+     */
     private String email;
+    /**
+     * 用户昵称
+     */
     private String nickName;
+    /**
+     * 用户角色
+     */
     private int role;
+    /**
+     * 用户积分
+     */
     private int score;
 
     //定义主键自增
