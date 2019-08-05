@@ -20,6 +20,7 @@ public class UserDetail {
     private String postNumber;
     private String address;
     private String registerTime;
+    private int score;
 
     @Id
     @GenericGenerator(name = "generator", strategy = "assigned")
@@ -95,5 +96,14 @@ public class UserDetail {
 
     public void setRegisterTime(String registerTime) {
         this.registerTime = registerTime;
+    }
+
+    @Column(name = "score")
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

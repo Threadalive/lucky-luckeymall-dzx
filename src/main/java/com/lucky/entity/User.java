@@ -34,7 +34,7 @@ public class User {
         this.id = id;
     }
 
-    @Column(name = "userName")
+    @Column(name = "user_name")
     public String getUserName() {
         return userName;
     }
@@ -52,7 +52,7 @@ public class User {
         this.email = email;
     }
 
-    @Column(name = "nickName")
+    @Column(name = "nick_name")
     public String getNickName() {
         return nickName;
     }

@@ -55,7 +55,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean updateUser(User user) {
-        String hql = "update User set name = ?,email=?,nickName=? where id=?";
+        String hql = "update User set userName = ?,email=?,nickName=? where id=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0,user.getUserName());
         query.setParameter(1,user.getEmail());
