@@ -10,7 +10,6 @@ public interface UserDao{
      *
      * @param user 注册用户对象
      * @return void
-     * @author zhenxing.dong@luckincoffee.com
      */
     void addUser(User user);
 
@@ -18,8 +17,7 @@ public interface UserDao{
      * 通过用户名或邮箱获取用户。
      *
      * @param nameOrEmail 用户名或邮箱
-     * @return com.lucky.entity.User
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 用户对象
      */
     User getUser(String nameOrEmail);
 
@@ -27,8 +25,7 @@ public interface UserDao{
      * 通过用户id获取用户。
      *
      * @param id 用户id
-     * @return com.lucky.entity.User
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 用户对象
      */
     User getUser(int id);
 
@@ -36,8 +33,7 @@ public interface UserDao{
      * 通过用那个户id删除指定用户。
      *
      * @param id 用户id
-     * @return boolean
-     * @author zhenxing.dong@luckincoffee.com
+     * @return boolean true:删除成功 false:删除失败
      */
     boolean deleteUser(int id);
 
@@ -45,16 +41,14 @@ public interface UserDao{
      * 更新用户信息。
      *
      * @param user 用户对象
-     * @return boolean
-     * @author zhenxing.dong@luckincoffee.com
+     * @return boolean true:更新成功 false:更新失败
      */
     boolean updateUser(User user);
 
     /**
      * 获取所有用户，以List<User>的形式返回。
      *
-     * @return java.util.List<com.lucky.entity.User>
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 用户对象列表
      */
     List<User> getAllUser();
 }

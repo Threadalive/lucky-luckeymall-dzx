@@ -1,14 +1,15 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/5 00:27
- */
 package com.lucky.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+
+/**
+ * @Description 商品信息的实体类
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/5 00:27
+ */
 @Entity
 @Table(name = "t_products")
 public class Product {
@@ -44,7 +45,6 @@ public class Product {
     @Id
     @GenericGenerator(name = "generator", strategy = "increment") //设置主键自增
     @GeneratedValue(generator = "generator")
-
     @Column(name = "id")
     public int getId() {
         return id;

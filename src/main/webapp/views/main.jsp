@@ -179,7 +179,7 @@
             }
         });
         if(jumpResult == "success"){
-            window.location.href = "${contextPath}/productView/product?getProductDetail";
+            window.location.href = "${contextPath}/product?getProductDetail";
         }
     }
 </script>

@@ -2,8 +2,10 @@ package com.lucky.dao.impl;
 
 import com.lucky.dao.ShoppingRecordDao;
 import com.lucky.entity.ShoppingRecord;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -14,6 +16,9 @@ import java.util.List;
  */
 @Repository
 public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
+
+    @Resource
+    private SessionFactory sessionFactory;
     @Override
     public ShoppingRecord getShoppingRecord(int userId, int productId, String time) {
         return null;

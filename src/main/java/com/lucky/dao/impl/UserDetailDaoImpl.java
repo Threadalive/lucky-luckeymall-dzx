@@ -2,8 +2,8 @@ package com.lucky.dao.impl;
 
 import com.lucky.dao.UserDetailDao;
 import com.lucky.entity.UserDetail;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -24,45 +24,51 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Resource
     private SessionFactory sessionFactory;
 
+    /**
+     * 封装的Hibernate增删改查模板方法对象
+     */
+    @Resource
+    private HibernateTemplate hibernateTemplate;
+
     @Override
     public UserDetail getUserDetail(int id) {
-        String hql = "from UserDetail where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0, id);
-        return (UserDetail)query.uniqueResult();
+        return hibernateTemplate.get(UserDetail.class,id);
     }
 
     @Override
     public void addUserDetail(UserDetail userDetail) {
-        sessionFactory.getCurrentSession().save(userDetail);
+        hibernateTemplate.save(userDetail);
     }
 
     @Override
     public boolean deleteUserDetail(int id) {
-        String hql = "delete UserDetail where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0, id);
-        return query.executeUpdate() > 0;
+        try {
+            hibernateTemplate.delete(hibernateTemplate.load(UserDetail.class, id));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean updateUserDetail(UserDetail userDetail) {
-        String hql = "update UserDetail set password=?,phoneNumber=?,sex=?,birthday=?,postNumber=?,address=? where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,userDetail.getPassword());
-        query.setParameter(1,userDetail.getPhoneNumber());
-        query.setParameter(2,userDetail.getSex());
-        query.setParameter(3,userDetail.getBirthday());
-        query.setParameter(4,userDetail.getPostNumber());
-        query.setParameter(5,userDetail.getAddress());
-        query.setParameter(6,userDetail.getId());
-        return query.executeUpdate() > 0;
+        try {
+            hibernateTemplate.update(userDetail);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public List<UserDetail> getAllUserDetail() {
-        String hql = "from UserDetail";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        return query.list();
+        List<UserDetail> userDetailsList = null;
+        //Spring4于Hibernate5之间存在冲突，类型无法转换，这里用Hibernate4
+        try {
+            userDetailsList = (List<UserDetail>) hibernateTemplate.find("from com.lucky.entity.UserDetail");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userDetailsList;
     }
 }

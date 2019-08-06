@@ -4,6 +4,7 @@ import com.lucky.dao.ProductDao;
 import com.lucky.entity.Product;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -11,8 +12,7 @@ import java.util.List;
 
 /**
  * @Description 对产品数据库实现操作的具体dao层。
- *
- * @Author zhenxing.dong@luckincoffee.com
+ * @Author zhenxing.dong
  * @Date 2019/8/5 00:45
  */
 @Repository
@@ -24,61 +24,54 @@ public class ProductDaoImpl implements ProductDao {
     @Resource
     private SessionFactory sessionFactory;
 
+    /**
+     * 封装的Hibernate增删改查模板方法对象
+     */
+    @Resource
+    private HibernateTemplate hibernateTemplate;
+
     @Override
     public Product getProduct(int id) {
-        String hql = "from Product where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,id);
-        return (Product) query.uniqueResult();
+        return hibernateTemplate.get(Product.class, id);
     }
 
     @Override
     public Product getProduct(String productName) {
-        String hql = "from Product where productName=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,productName);
-        return (Product) query.uniqueResult();
+        return hibernateTemplate.get(Product.class, productName);
     }
 
     @Override
     public void addProduct(Product product) {
-        sessionFactory.getCurrentSession().save(product);
+        hibernateTemplate.save(product);
     }
 
     @Override
     public boolean deleteProduct(int id) {
-        String hql = "delete Product where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,id);
-        return query.executeUpdate()>0;
+        try {
+            hibernateTemplate.delete(hibernateTemplate.load(Product.class, id));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean updateProduct(Product product) {
-        String hql = "update Product set productName=?,description=?,keyWord=?,price=?,counts=?,type=? where id=?";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,product.getProductName());
-        query.setParameter(1,product.getDescription());
-        query.setParameter(2,product.getKeyWord());
-        query.setParameter(3,product.getPrice());
-        query.setParameter(4,product.getCounts());
-        query.setParameter(5,product.getType());
-        query.setParameter(6,product.getId());
-        return query.executeUpdate()>0;
+        try {
+            hibernateTemplate.update(product);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public List<Product> getProductsByKeyWord(String searchKeyWord) {
-        //在输入的每个关键字中穿插%符号，在数据库中进行like匹配
-        String queryKeyWord = "%";
-        for(int i=0;i<searchKeyWord.length();i++){
-            queryKeyWord += String.valueOf(searchKeyWord.charAt(i)) +"%";
-        }
-
-        String hql = "from Product where productName like ? or keyWord like ?";
+        //在输入的每个关键字首尾加%符号，在数据库中进行like匹配
+        String hql = "from Product where productName like concat('%',?,'%') or keyWord like concat('%',?,'%')";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,queryKeyWord);
-        query.setParameter(1,queryKeyWord);
+        query.setParameter(0, searchKeyWord);
+        query.setParameter(1, searchKeyWord);
         return query.list();
     }
 
@@ -86,14 +79,19 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getProductsByType(int type) {
         String hql = "from Product where type=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,type);
+        query.setParameter(0, type);
         return query.list();
     }
 
     @Override
     public List<Product> getAllProduct() {
-        String hql = "from Product";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        return query.list();
+        List<Product> productList = null;
+        //Spring4于Hibernate5之间存在冲突，类型无法转换，这里用Hibernate4
+        try {
+            productList = (List<Product>) hibernateTemplate.find("from com.lucky.entity.Product");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return productList;
     }
 }

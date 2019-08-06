@@ -1,7 +1,6 @@
 package com.lucky.dao;
 
 import com.lucky.entity.Product;
-
 import java.util.List;
 
 public interface ProductDao {
@@ -10,7 +9,6 @@ public interface ProductDao {
      *
      * @param id 产品id
      * @return com.lucky.entity.Product
-     * @author zhenxing.dong@luckincoffee.com
      */
     Product getProduct(int id);
 
@@ -19,7 +17,6 @@ public interface ProductDao {
      *
      * @param productName 商品名
      * @return com.lucky.entity.Product
-     * @author zhenxing.dong@luckincoffee.com
      */
     Product getProduct(String productName);
 
@@ -28,7 +25,6 @@ public interface ProductDao {
      *
      * @param product
      * @return void
-     * @author zhenxing.dong@luckincoffee.com
      */
     void addProduct(Product product);
 
@@ -37,7 +33,6 @@ public interface ProductDao {
      *
      * @param id 商品id
      * @return boolean
-     * @author zhenxing.dong@luckincoffee.com
      */
     boolean deleteProduct(int id);
 
@@ -46,7 +41,6 @@ public interface ProductDao {
      *
      * @param product 更新的商品对象
      * @return boolean
-     * @author zhenxing.dong@luckincoffee.com
      */
     boolean updateProduct(Product product);
 
@@ -55,7 +49,6 @@ public interface ProductDao {
      *
      * @param searchKeyWord 搜索关键字
      * @return java.util.List<com.lucky.entity.Product>
-     * @author zhenxing.dong@luckincoffee.com
      */
     List<Product> getProductsByKeyWord(String searchKeyWord);
 
@@ -64,7 +57,6 @@ public interface ProductDao {
      *
      * @param type 商品类型
      * @return java.util.List<com.lucky.entity.Product>
-     * @author zhenxing.dong@luckincoffee.com
      */
     List<Product> getProductsByType(int type);
 
@@ -72,7 +64,6 @@ public interface ProductDao {
      * 实现所有商品的展示，以List<Product>形式返回。
      *
      * @return java.util.List<com.lucky.entity.Product>
-     * @author zhenxing.dong@luckincoffee.com
      */
     List<Product> getAllProduct();
 }

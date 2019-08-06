@@ -1,14 +1,16 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/2 10:58
- */
 package com.lucky.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Id;
+
 import javax.persistence.*;
 
+/**
+ * @Description 用户细节信息实体类
+ * @Author zhenxing.dong@luckincoffee.com
+ * @Date 2019/8/2 10:58
+ */
 @Entity
 @Table(name = "t_user_detail")
 public class UserDetail {
@@ -43,7 +45,7 @@ public class UserDetail {
     /**
      * 用户注册时间
      */
-    private String registerTime;
+    private long registerTime;
     /**
      * 用户积分
      */
@@ -117,11 +119,11 @@ public class UserDetail {
     }
 
     @Column(name = "register_time")
-    public String getRegisterTime() {
+    public long getRegisterTime() {
         return registerTime;
     }
 
-    public void setRegisterTime(String registerTime) {
+    public void setRegisterTime(long registerTime) {
         this.registerTime = registerTime;
     }
 

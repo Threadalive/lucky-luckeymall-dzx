@@ -1,9 +1,6 @@
 package com.lucky.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -39,7 +36,6 @@ public class ShoppingRecord {
      */
     private int counts;
 
-    @Id
     @Column(name = "user_id")
     public int getUserId() {
         return userId;
@@ -49,7 +45,6 @@ public class ShoppingRecord {
         this.userId = userId;
     }
 
-    @Id
     @Column(name = "product_id")
     public int getProductId() {
         return productId;
@@ -59,7 +54,6 @@ public class ShoppingRecord {
         this.productId = productId;
     }
 
-    @Id
     @Column(name = "create_time")
     public String getCreateTime() {
         return createTime;
@@ -69,7 +63,6 @@ public class ShoppingRecord {
         this.createTime = createTime;
     }
 
-    @Id
     @Column(name = "order_status")
     public int getOrderStatus() {
         return orderStatus;
@@ -79,7 +72,6 @@ public class ShoppingRecord {
         this.orderStatus = orderStatus;
     }
 
-    @Id
     @Column(name = "product_price")
     public BigDecimal getProductPrice() {
         return productPrice;
@@ -89,7 +81,7 @@ public class ShoppingRecord {
         this.productPrice = productPrice;
     }
 
-    @Id
+
     @Column(name = "counts")
     public int getCounts() {
         return counts;

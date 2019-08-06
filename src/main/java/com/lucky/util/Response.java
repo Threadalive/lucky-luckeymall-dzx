@@ -6,6 +6,7 @@
 package com.lucky.util;
 
 public class Response {
+
     public int status;
     public String message;
     public Object content;

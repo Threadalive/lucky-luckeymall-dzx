@@ -7,7 +7,8 @@ import javax.persistence.*;
 
 /**
  * @Description 用户主体信息实体类
- * @Author zhenxing.dong@luckincoffee.com
+ *
+ * @Author zhenxing.dong
  * @Date 2019/8/1 15:24
  */
 @Entity

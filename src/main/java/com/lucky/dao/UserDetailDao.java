@@ -10,8 +10,7 @@ public interface UserDetailDao {
      * 根据id获取用户细节信息类的指定对象。
      *
      * @param id 用户细节信息类的id
-     * @return com.lucky.entity.UserDetail
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 指定id的用户细节信息对象
      */
     UserDetail getUserDetail(int id);
 
@@ -20,7 +19,6 @@ public interface UserDetailDao {
      *
      * @param userDetail 用户信息对象
      * @return void
-     * @author zhenxing.dong@luckincoffee.com
      */
     void addUserDetail(UserDetail userDetail);
 
@@ -29,7 +27,6 @@ public interface UserDetailDao {
      *
      * @param id 用户信息对象id
      * @return boolean true:删除成功 false:删除失败
-     * @author zhenxing.dong@luckincoffee.com
      */
     boolean deleteUserDetail(int id);
 
@@ -37,16 +34,14 @@ public interface UserDetailDao {
      * 更新用户细节信息对象。
      *
      * @param userDetail 用户细节信息对象
-     * @return boolean
-     * @author zhenxing.dong@luckincoffee.com
+     * @return boolean true:更新成功 false:更新失败
      */
     boolean updateUserDetail(UserDetail userDetail);
 
     /**
      * 获取所有用户细节信息对象。
      *
-     * @return java.util.List<com.lucky.entity.UserDetail>
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 所有用户详细信息对象
      */
     List<UserDetail> getAllUserDetail();
 }
