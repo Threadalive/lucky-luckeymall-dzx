@@ -128,9 +128,9 @@ public class ProductController {
      * @param id 要查询的商品id
      * @return 搜索结果
      */
-    @PostMapping(params = "searchProductById")
+    @PostMapping(params = "getProductById")
     @ResponseBody
-    public Map<String, Object> searchProductById(int id) {
+    public Map<String, Object> getProductById(int id) {
         return productService.searchProductById(id);
     }
 

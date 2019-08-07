@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "t_shopping_record")
+@IdClass(value = ShoppingRecordPK.class)
 public class ShoppingRecord {
     /**
      * 用户id
@@ -36,6 +37,7 @@ public class ShoppingRecord {
      */
     private int counts;
 
+    @Id
     @Column(name = "user_id")
     public int getUserId() {
         return userId;
@@ -45,6 +47,7 @@ public class ShoppingRecord {
         this.userId = userId;
     }
 
+    @Id
     @Column(name = "product_id")
     public int getProductId() {
         return productId;
@@ -54,6 +57,7 @@ public class ShoppingRecord {
         this.productId = productId;
     }
 
+    @Id
     @Column(name = "create_time")
     public String getCreateTime() {
         return createTime;

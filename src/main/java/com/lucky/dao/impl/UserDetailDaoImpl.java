@@ -13,7 +13,7 @@ import java.util.List;
  * @Description 用于操作用户细节信息表的dao层，包括添加、
  * 删除、更新和获取用户。
  *
- * @Author zhenxing.dong@luckincoffee.com
+ * @Author zhenxing.dong
  * @Date 2019/8/2 22:16
  */
 @Repository

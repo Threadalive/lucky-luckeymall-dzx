@@ -44,6 +44,7 @@
                 <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
             </props>
         </property>
+
         <!--扫描实体类包-->
         <property name="packagesToScan">
             <list>
@@ -51,11 +52,19 @@
             </list>
         </property>
     </bean>
+
+    <!--hibernateTemplate的配置-->
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
     <!--配置事务管理器-->
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
     <aop:config proxy-target-class="true">
         <aop:advisor pointcut="execution(public * com.lucky.service.*Service.*(..))" advice-ref="txAdvice" />
     </aop:config>

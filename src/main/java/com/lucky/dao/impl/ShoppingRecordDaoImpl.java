@@ -1,8 +1,11 @@
 package com.lucky.dao.impl;
 
 import com.lucky.dao.ShoppingRecordDao;
+import com.lucky.entity.Product;
 import com.lucky.entity.ShoppingRecord;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -11,7 +14,7 @@ import java.util.List;
 /**
  * @Description 操作用户购物记录数据库表的dao层实现类
  *
- * @Author zhenxing.dong@luckincoffee.com
+ * @Author zhenxing.dong
  * @Date 2019/8/5 17:58
  */
 @Repository
@@ -19,6 +22,9 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Resource
     private SessionFactory sessionFactory;
+    @Resource
+    private HibernateTemplate hibernateTemplate;
+
     @Override
     public ShoppingRecord getShoppingRecord(int userId, int productId, String time) {
         return null;
@@ -26,7 +32,7 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public void addShoppingRecord(ShoppingRecord shoppingRecord) {
-
+        hibernateTemplate.save(shoppingRecord);
     }
 
     @Override
@@ -41,12 +47,21 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public List<ShoppingRecord> getShoppingRecords(int userId) {
-        return null;
+        String hql = "from ShoppingRecord where userId=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0, userId);
+        return query.list();
     }
 
     @Override
     public List<ShoppingRecord> getAllShoppingRecords() {
-        return null;
+        List<ShoppingRecord> shoppingRecordList = null;
+        try {
+            shoppingRecordList = (List<ShoppingRecord>) hibernateTemplate.find("from com.lucky.entity.ShoppingRecord");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return shoppingRecordList;
     }
 
     @Override
