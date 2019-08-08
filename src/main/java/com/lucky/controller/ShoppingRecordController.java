@@ -1,11 +1,13 @@
 package com.lucky.controller;
 
+import com.lucky.entity.ShoppingRecord;
 import com.lucky.service.ShoppingRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -67,11 +69,14 @@ public class ShoppingRecordController {
      * @return 包含订单记录的JSON字符串对象
      */
     @PostMapping(params = "getShoppingRecords")
+    @ResponseBody
     public Map<String,Object> getShoppingRecords(int userId){
         return shoppingRecordService.getShoppingRecords(userId);
     }
 
-
-
-
+    @PostMapping(params = "updateShoppingRecords")
+    @ResponseBody
+    public Map<String,Object> updateShoppingRecords(ShoppingRecord shoppingRecord){
+        return shoppingRecordService.updateShoppingRecord(shoppingRecord);
+    }
 }

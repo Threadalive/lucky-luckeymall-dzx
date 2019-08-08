@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @Description 用户基本信息管理的服务类，包括用户基本信息的增删改查。
  *
- * @Author zhenxing.dong@luckincoffee.com
+ * @Author zhenxing.dong
  * @Date 2019/8/1 15:46
  */
 @Service
@@ -66,6 +66,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUser() {
         return userDao.getAllUser();
+    }
+
+    @Override
+    public Map<String, Object> getUserAddressAndPhoneNumber(int userId) {
+        String address = userDetailService.getUserDetail(userId).getAddress();
+        String phoneNumber = userDetailService.getUserDetail(userId).getPhoneNumber();
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("address",address);
+        resultMap.put("phoneNumber",phoneNumber);
+        return resultMap;
     }
 
     @Transactional

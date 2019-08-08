@@ -38,7 +38,7 @@ public interface ShoppingRecordService {
      * @param shoppingRecord 新的订单记录对象
      * @return boolean true:更新成功 false:更新失败
      */
-    boolean updateShoppingRecord(ShoppingRecord shoppingRecord);
+    Map<String,Object> updateShoppingRecord(ShoppingRecord shoppingRecord);
 
     /**
      * 根据订单状态获取订单记录

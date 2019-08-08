@@ -8,13 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProductService {
-    /**
-     * 实现根据产品id获取指定产品。
-     *
-     * @param id 产品id
-     * @return 具体商品对象
-     */
-    Product getProduct(int id);
 
     /**
      * 实现根据产品名获取指定产品对象。
@@ -86,5 +79,5 @@ public interface ProductService {
      * @param id 要查询的商品id
      * @return 搜索结果
      */
-    Map<String, Object> searchProductById(int id);
+    Map<String, Object> getProductById(int id);
 }

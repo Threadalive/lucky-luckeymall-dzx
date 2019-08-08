@@ -1,8 +1,3 @@
-/**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
- * @Date 2019/8/6 11:39
- */
 package com.lucky.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
@@ -16,6 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @Description 订单记录模块管理的服务类
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/6 11:39
+ */
 @Service
 public class ShoppingRecordServiceImpl implements ShoppingRecordService {
 
@@ -39,8 +40,14 @@ public class ShoppingRecordServiceImpl implements ShoppingRecordService {
     }
 
     @Override
-    public boolean updateShoppingRecord(ShoppingRecord shoppingRecord) {
-        return shoppingRecordDao.updateShoppingRecord(shoppingRecord);
+    public Map<String,Object> updateShoppingRecord(ShoppingRecord shoppingRecord) {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+            if(shoppingRecordDao.updateShoppingRecord(shoppingRecord)) {
+                resultMap.put("result", "success");
+            }else {
+                resultMap.put("result", "fail");
+            }
+            return resultMap;
     }
 
     @Override

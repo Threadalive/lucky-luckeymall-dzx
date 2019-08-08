@@ -114,4 +114,16 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    /**
+     * 根据用户id获取他的地址和手机号码
+     *
+     * @param userId 用户id
+     * @return 用户地址，用户手机号码
+     */
+    @PostMapping(params = "getUserNameAndPhoneNumber")
+    @ResponseBody
+    public Map<String,Object> getUserAddressAndPhoneNumber(int userId){
+        return userService.getUserAddressAndPhoneNumber(userId);
+    }
+
 }

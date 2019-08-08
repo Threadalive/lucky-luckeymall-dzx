@@ -131,7 +131,7 @@ public class ProductController {
     @PostMapping(params = "getProductById")
     @ResponseBody
     public Map<String, Object> getProductById(int id) {
-        return productService.searchProductById(id);
+        return productService.getProductById(id);
     }
 
     /**

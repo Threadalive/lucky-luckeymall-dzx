@@ -90,4 +90,11 @@ public interface UserService {
      */
     Map<String,Object> doLogin(String nameOrEmail, String password, HttpSession httpSession);
 
+    /**
+     * 通过用户id获取用户的地址和手机号码
+     *
+     * @param userId 用户id
+     * @return
+     */
+    Map<String,Object> getUserAddressAndPhoneNumber(int userId);
 }

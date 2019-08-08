@@ -142,7 +142,7 @@
             '<th>订单状态</th>'+
             '</tr>';
 
-        // 内容暂存对象
+        // 内容暂存变量
         var unHandleHTMLTemp = "";
         var transportHTMLTemp = "";
         var receiveHTMLTemp = "";
@@ -314,11 +314,11 @@
     function getUserAddress(id) {
         var address = "";
         var user = {};
-        user.id = id;
+        user.userId = id;
         $.ajax({
             async : false, //设置同步
             type : 'POST',
-            url : '${contextPath}/getUserAddressAndPhoneNumber',
+            url : '${contextPath}/user?getUserNameAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
@@ -335,11 +335,11 @@
     function getUserPhoneNumber(id) {
         var phoneNumber = "";
         var user = {};
-        user.id = id;
+        user.userId = id;
         $.ajax({
             async : false, //设置同步
             type : 'POST',
-            url : '${contextPath}/getUserAddressAndPhoneNumber',
+            url : '${contextPath}/user?getUserNameAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
@@ -371,7 +371,7 @@
         $.ajax({
             async : false, //设置同步
             type : 'POST',
-            url : '${contextPath}/shoppingRecord/updateShoppingRecord',
+            url : '${contextPath}/shoppingRecord?updateShoppingRecord',
             data : shoppingRecord,
             dataType : 'json',
             success : function(result) {
@@ -383,7 +383,7 @@
         });
         if(receiveResult = "success")
             layer.msg('收获成功',{icon:1},function(){
-                window.location.href = "${contextPath}/shoppingRecord/showShoppingRecord";
+                window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
             });
     }
 

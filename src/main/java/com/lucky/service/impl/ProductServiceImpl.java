@@ -16,7 +16,8 @@ import java.util.Map;
 
 /**
  * @Description 产品管理类的服务类，包括对商品的增删改查功能。
- * @Author zhenxing.dong@luckincoffee.com
+ *
+ * @Author zhenxing.dong
  * @Date 2019/8/5 00:43
  */
 @Service
@@ -27,11 +28,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Autowired
     ProductDao productDao;
-
-    @Override
-    public Product getProduct(int id) {
-        return productDao.getProduct(id);
-    }
 
     @Override
     public Product getProduct(String productName) {
@@ -89,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map<String, Object> getProductDetail(int id, HttpSession httpSession) {
-        Product product = getProduct(id);
+        Product product = productDao.getProduct(id);
         httpSession.setAttribute("product", product);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("result", "success");
@@ -97,8 +93,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> searchProductById(int id) {
-        Product product = getProduct(id);
+    public Map<String, Object> getProductById(int id) {
+        Product product = productDao.getProduct(id);
         String searchResult = JSONArray.toJSONString(product);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", searchResult);

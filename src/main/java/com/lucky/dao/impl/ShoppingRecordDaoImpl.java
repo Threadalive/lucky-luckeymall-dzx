@@ -5,6 +5,7 @@ import com.lucky.entity.Product;
 import com.lucky.entity.ShoppingRecord;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -42,7 +43,12 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public boolean updateShoppingRecord(ShoppingRecord shoppingRecord) {
-        return false;
+        try {
+            hibernateTemplate.update(shoppingRecord);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
