@@ -1,5 +1,6 @@
 package com.lucky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.lucky.dao.UserDao;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
@@ -48,8 +49,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(int id) {
-        return userDao.getUser(id);
+    public Map<String, Object> getUserById(int id) {
+        User user = userDao.getUser(id);
+        String result = JSON.toJSONString(user);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("result", result);
+        return resultMap;
     }
 
     @Override
@@ -72,9 +77,19 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> getUserAddressAndPhoneNumber(int userId) {
         String address = userDetailService.getUserDetail(userId).getAddress();
         String phoneNumber = userDetailService.getUserDetail(userId).getPhoneNumber();
+
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("address",address);
         resultMap.put("phoneNumber",phoneNumber);
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getUserDetailById(int id) {
+        UserDetail userDetail = userDetailService.getUserDetail(id);
+        String result = JSON.toJSONString(userDetail);
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        resultMap.put("result",result);
         return resultMap;
     }
 
@@ -97,7 +112,7 @@ public class UserServiceImpl implements UserService {
                 vUser.setScore(0);
                 vUser.setRole(0);
                 addUser(vUser);
-                user = getUser(vUser.getId());
+                user = userDao.getUser(vUser.getId());
                 //设置t_user_detail表的值
                 vUserDetail.setId(user.getId());
                 vUserDetail.setScore(0);

@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Object> getProductDetail(int id, HttpSession httpSession) {
         Product product = productDao.getProduct(id);
-        httpSession.setAttribute("product", product);
+        httpSession.setAttribute("productDetail", product);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("result", "success");
         return resultMap;

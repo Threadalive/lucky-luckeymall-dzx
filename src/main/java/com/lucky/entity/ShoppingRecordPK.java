@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class ShoppingRecordPK implements Serializable {
     private int userId;
     private int productId;
-    private String createTime;
+    private long createTime;
 
 
     public int getUserId() {
@@ -29,11 +29,11 @@ public class ShoppingRecordPK implements Serializable {
         this.productId = productId;
     }
 
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
@@ -41,7 +41,7 @@ public class ShoppingRecordPK implements Serializable {
     public int hashCode() {
         int result = getUserId();
         result = 31 * result + getProductId();
-        result = 31 * result + getCreateTime().hashCode();
+//        result = 31 * result + getCreateTime();
         return result;    }
 
     @Override
@@ -53,7 +53,7 @@ public class ShoppingRecordPK implements Serializable {
 
         if (getUserId() != that.getUserId()) return false;
         if (getProductId() != that.getProductId()) return false;
-        return getCreateTime().equals(that.getCreateTime());
+        return getCreateTime()== (that.getCreateTime());
     }
 
 }

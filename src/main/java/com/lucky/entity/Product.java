@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 
 /**
  * @Description 商品信息的实体类
- * @Author zhenxing.dong@luckincoffee.com
+ * @Author zhenxing.dong
+ *
  * @Date 2019/8/5 00:27
  */
 @Entity

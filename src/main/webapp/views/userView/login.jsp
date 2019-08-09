@@ -8,12 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-
 <html>
 <head>
     <title>LuckyMall</title>
 </head>
-<body>
+<body background="${contextPath}/bgimg/login_img02.png">
 <form id="loginForm" onsubmit="return false">
     <div class="container-fluid" style="padding-top: 80px;padding-bottom: 80px" >
         <h1 class="title center">登录</h1>
@@ -43,6 +42,7 @@
         </div>
     </div>
 </form>
+
 </body>
 
 <link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
@@ -104,11 +104,11 @@
             errorElement: "div",
             rules: {
                 nameOrEmail: {
-                    required: true,
+                    required: true
                 },
                 password: {
-                    required: true,
-                },
+                    required: true
+                }
             },
             messages: {
                 nameOrEmail: {

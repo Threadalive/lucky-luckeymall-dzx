@@ -1,5 +1,6 @@
 package com.lucky.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -66,7 +68,12 @@ public class UserController {
     @PostMapping(params = "register")
     @ResponseBody
     public Map<String, Object> doRegister(User vUser,UserDetail vUserDetail){
-        return userService.doRegister(vUser,vUserDetail);
+        //参数处理判断
+        if(vUser!=null&&vUserDetail!=null) {
+            return userService.doRegister(vUser, vUserDetail);
+        }else {
+            return null;
+        }
     }
 
     /**
@@ -103,6 +110,22 @@ public class UserController {
     }
 
     /**
+     * 根据用户id获取具体用户对象
+     *
+     * @param id 用户id
+     * @return 指定id的用户对象
+     */
+    @PostMapping(params = "getUserById")
+    @ResponseBody
+    public Map<String, Object> getUserById(int id) {
+        if(id!=0) {
+            return userService.getUserById(id);
+        }else {
+            return null;
+        }
+    }
+
+    /**
      * delete请求控制用户信息的删除，根据URL中传入的参数id，删除对应id的用户。
      * URL如 delete: http://127.0.0.7:8080/user/2，即删除id为2的用户。
      *
@@ -126,4 +149,35 @@ public class UserController {
         return userService.getUserAddressAndPhoneNumber(userId);
     }
 
+    /**
+     * 清除session中currentUser属性实现退出登录功能
+     *
+     * @param httpSession 当前数据暂存区
+     * @return 退出登录结果
+     */
+    @PostMapping(params = "doLogout")
+    @ResponseBody
+    public Map<String,Object> doLogout(HttpSession httpSession){
+        Map<String, Object> resultMap = new HashMap<>();
+        if(httpSession.getAttribute("currentUser")==null){
+            resultMap.put("result","noUser");
+            return resultMap;
+        }else {
+            httpSession.setAttribute("currentUser", "");
+            resultMap.put("result", "redirect:login");
+            return resultMap;
+        }
+    }
+
+    /**
+     * 根据用户id获取用户详细信息
+     *
+     * @param id 用户id
+     * @return 用户详细信息结果
+     */
+    @PostMapping(params = "getUserDetailById")
+    @ResponseBody
+    public Map<String, Object> getUserDetailById(int id) {
+        return userService.getUserDetailById(id);
+    }
 }

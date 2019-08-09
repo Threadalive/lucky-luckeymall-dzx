@@ -2,7 +2,6 @@ package com.lucky.service;
 
 import com.lucky.entity.ShoppingRecord;
 
-import java.util.List;
 import java.util.Map;
 
 public interface ShoppingRecordService {
@@ -14,14 +13,15 @@ public interface ShoppingRecordService {
      * @param createTime 订单创建时间
      * @return 订单记录对象
      */
-    ShoppingRecord getShoppingRecord(int userId, int productId, String createTime);
+    ShoppingRecord getShoppingRecord(int userId, int productId, long createTime);
 
     /**
-     * 添加订单记录
+     * 添加记录对象
      *
      * @param shoppingRecord 订单记录对象
+     * @return 添加结果
      */
-    void addShoppingRecord(ShoppingRecord shoppingRecord);
+    Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord);
 
     /**
      * 根据用户id与产品id删除指定订单记录
@@ -36,18 +36,9 @@ public interface ShoppingRecordService {
      * 更新订单记录
      *
      * @param shoppingRecord 新的订单记录对象
-     * @return boolean true:更新成功 false:更新失败
+     * @return 更新结果
      */
     Map<String,Object> updateShoppingRecord(ShoppingRecord shoppingRecord);
-
-    /**
-     * 根据订单状态获取订单记录
-     *
-     * @param orderStatus 订单状态
-     * @return 订单记录列表
-     */
-    List<ShoppingRecord> getShoppingRecordsByOrderStatus(int orderStatus);
-
     /**
      * 根据用户id获取订单记录
      *
@@ -59,9 +50,9 @@ public interface ShoppingRecordService {
     /**
      * 获取所有订单记录
      *
-     * @return 订单记录列表
+     * @return 所有的订单记录集
      */
-    List<ShoppingRecord> getAllShoppingRecords();
+    Map<String,Object> getAllShoppingRecords();
 
     /**
      * 根据用户id与商品id查询订单是否存在
@@ -71,4 +62,13 @@ public interface ShoppingRecordService {
      * @return boolean true:订单存在 false:订单不存在
      */
     boolean getUserProductRecord(int userId,int productId);
+
+    /**
+     * 根据订单状态获取订单记录
+     *
+     * @param orderStatus 订单状态
+     * @return 获取的订单记录集
+     */
+    Map<String,Object> getShoppingRecordByOrderStatus(int orderStatus);
+
 }

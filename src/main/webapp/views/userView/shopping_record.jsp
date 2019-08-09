@@ -93,18 +93,18 @@
         var receiveCount = $("#receiveCount");
         var allCount = $("#allCount");
 
-        var unHandleCounts = parseInt(unHandleCount.innerHTML);
-        var transportCounts = parseInt(transportCount.innerHTML);
-        var receiveCounts = parseInt(receiveCount.innerHTML);
-        var allCounts = parseInt(allCount.innerHTML);
+        var unHandleCounts = parseInt(unHandleCount.html());
+        var transportCounts = parseInt(transportCount.html());
+        var receiveCounts = parseInt(receiveCount.html());
+        var allCounts = parseInt(allCount.html());
 
         // 获取所有订单
         var allShoppingRecords = getShoppingRecords();
 
-        unHandleTable.innerHTML = "";
-        transportTable.innerHTML = "";
-        receiveTable.innerHTML = "";
-        allTable.innerHTML = "";
+        unHandleTable.html("");
+        transportTable.html("");
+        receiveTable.html("");
+        allTable.html("");
 
         // 未处理的订单块
         var unHandleHTML = '<tr>'+
@@ -170,11 +170,11 @@
                 unHandleCounts++;
             }
             // 当订单状态为1，即配送中，设置配送中块的html内容
-            else if(allShoppingRecords[i].orderStatus ==1){
+            else if(allShoppingRecords[i].orderStatus == 1){
                 // 根据用户id获取用户收货地址
                 var address = getUserAddress(allShoppingRecords[i].userId);
                 // 根据用户id获取用户电话号码
-                var phoneNumber = getUserPhoneNumber(allShoppingRecords[i].userId)
+                var phoneNumber = getUserPhoneNumber(allShoppingRecords[i].userId);
                 // 设置配送块的html代码，点击确认收货后调用receiveProducts函数设置订单状态
                 transportHTMLTemp+= '<tr>'+
                     '<td>'+product.productName+'</td>'+
@@ -249,43 +249,17 @@
             allHTML+=allHTMLTemp;
 
         // 设置每个状态订单的数量
-        unHandleCount.innerHTML = unHandleCounts;
-        transportCount.innerHTML = transportCounts;
-        receiveCount.innerHTML = receiveCounts;
-        allCount.innerHTML = allCounts;
+        unHandleCount.html(unHandleCounts);
+        transportCount.html(transportCounts);
+        receiveCount.html(receiveCounts);
+        allCount.html(allCounts);
 
         // 将设置的内容块填入指定区域
-        unHandleTable.innerHTML += unHandleHTML;
-        transportTable.innerHTML += transportHTML;
-        receiveTable.innerHTML += receiveHTML;
-        allTable.innerHTML += allHTML;
+        unHandleTable.html(unHandleTable.html()+unHandleHTML);
+        transportTable.html(transportTable.html()+transportHTML);
+        receiveTable.html(receiveTable.html()+receiveHTML);
+        allTable.html(allTable.html()+allHTML);
         layer.close(loading);
-    }
-
-    // 用于获取所有的订单记录
-    function getShoppingRecords() {
-        // 判断用户是否登录
-        judgeIsLogin();
-
-        var shoppingRecordProducts = "";
-        var user = {};
-        user.userId = ${currentUser.id};
-        $.ajax({
-            async : false, //设置同步
-            type : 'POST',
-            url : '${contextPath}/shoppingRecord?getShoppingRecords',
-            data : user,
-            dataType : 'json',
-            success : function(result) {
-                shoppingRecordProducts = result.result;
-            },
-            error : function(result) {
-                layer.alert('查询错误');
-            }
-        });
-        // 解析返回的json字符串信息
-        shoppingRecordProducts = eval("("+shoppingRecordProducts+")");
-        return shoppingRecordProducts;
     }
 
     // 根基商品id获取具体商品对象
@@ -360,31 +334,60 @@
             });
         }
     }
-    // 设置点击收获后更改订单状态
-    function receiveProducts(userId,productId,createTime) {
-        var receiveResult = "";
-        var shoppingRecord = {};
-        shoppingRecord.userId = userId;
-        shoppingRecord.productId = productId;
-        shoppingRecord.createTime = createTime;
-        shoppingRecord.orderStatus = 2;
+    // 用于用户获取所有的订单记录
+    function getShoppingRecords() {
+        // 判断用户是否登录
+        judgeIsLogin();
+
+        var shoppingRecordProducts = "";
+        var user = {};
+        user.userId = ${currentUser.id};
         $.ajax({
             async : false, //设置同步
             type : 'POST',
-            url : '${contextPath}/shoppingRecord?updateShoppingRecord',
-            data : shoppingRecord,
+            url : '${contextPath}/shoppingRecord?getShoppingRecords',
+            data : user,
             dataType : 'json',
             success : function(result) {
-                receiveResult = result.result;
+                shoppingRecordProducts = result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        if(receiveResult = "success")
-            layer.msg('收获成功',{icon:1},function(){
-                window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+        // 解析返回的json字符串信息
+        shoppingRecordProducts = eval("("+shoppingRecordProducts+")");
+        return shoppingRecordProducts;
+    }
+    // 设置点击收获后更改订单状态
+    function receiveProducts(userId,productId,createTime) {
+        layer.confirm('您确定收到货了嘛？',{icon: 3, title:'提示'},function (loading) {
+            var receiveResult = "";
+            var shoppingRecord = {};
+            shoppingRecord.userId = userId;
+            shoppingRecord.productId = productId;
+            shoppingRecord.createTime = createTime;
+            shoppingRecord.orderStatus = 2;
+            $.ajax({
+                async : false, //设置同步
+                type : 'POST',
+                url : '${contextPath}/shoppingRecord?updateShoppingRecords',
+                data : shoppingRecord,
+                dataType : 'json',
+                success : function(result) {
+                    receiveResult = result.result;
+                },
+                error : function(result) {
+                    layer.alert('收货失败啦，再试一次吧~');
+                }
             });
+            if(receiveResult == "success"){
+                layer.msg('收货成功',{icon:1},function(){
+                    window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+                });
+            layer.close(loading);
+            }
+        });
     }
 
     // 根据商品id跳转相应的商品详情页
@@ -395,7 +398,7 @@
         $.ajax({
             async : false, //设置同步
             type : 'POST',
-            url : '${contextPath}/productDetail',
+            url : '${contextPath}/product?getProductDetail',
             data : product,
             dataType : 'json',
             success : function(result) {
@@ -405,9 +408,10 @@
                 layer.alert('查询错误');
             }
         });
-
         if(jumpResult == "success"){
-            window.location.href = "${contextPath}/product_detail";
+            layer.msg('即将进入详情页面~',{icon:1},function(){
+                window.location.href = "${contextPath}/product?getProductDetail";
+            });
         }
     }
 </script>

@@ -22,6 +22,7 @@
     <mvc:annotation-driven />
     <mvc:resources location="/static/js/" mapping="/js/**"/>
     <mvc:resources location="/static/img/" mapping="/img/**"/>
+    <mvc:resources location="/static/bgimg/" mapping="/bgimg/**"/>
     <mvc:resources location="/static/css/" mapping="/css/**"/>
 
     <!--配置请求映射及处理器分配配置-->

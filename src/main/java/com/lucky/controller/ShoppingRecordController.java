@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,16 +54,6 @@ public class ShoppingRecordController {
     }
 
     /**
-     * 添加订单信息
-     *
-     * @return 添加结果
-     */
-    @PostMapping(params = "addShoppingRecord")
-    public Map<String,Object> addShoppingRecord(){
-        return null;
-    }
-
-    /**
      * 根据用户id获取订单记录对象，结果以JSON字符串对象返回给前台
      *
      * @param userId 用户id
@@ -74,9 +65,78 @@ public class ShoppingRecordController {
         return shoppingRecordService.getShoppingRecords(userId);
     }
 
+    /**
+     * 根据订单记录的3个主键确定并更新订单
+     *
+     * @param shoppingRecord 指定订单记录
+     * @return 更新结果
+     */
     @PostMapping(params = "updateShoppingRecords")
     @ResponseBody
     public Map<String,Object> updateShoppingRecords(ShoppingRecord shoppingRecord){
+        System.out.println(shoppingRecord.getProductId());
+        System.out.println("..............");
         return shoppingRecordService.updateShoppingRecord(shoppingRecord);
     }
+
+    /**
+     * 用户下单后添加订单记录项
+     *
+     * @param shoppingRecord 新的订单记录项
+     * @return 添加结果
+     */
+    @PostMapping(params = "addShoppingRecord")
+    @ResponseBody
+    public  Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord){
+        return shoppingRecordService.addShoppingRecord(shoppingRecord);
+    }
+
+    /**
+     * 根据订单状态获取订单记录
+     *
+     * @param orderStatus 订单状态
+     * @return 指定状态的订单记录集
+     */
+    @PostMapping(params = "getShoppingRecordByOrderStatus")
+    @ResponseBody
+    public Map<String,Object> getShoppingRecordByOrderStatus(int orderStatus){
+        if(orderStatus!=0&&orderStatus!=1&&orderStatus!=2){
+            return null;
+        }else
+            {
+            return shoppingRecordService.getShoppingRecordByOrderStatus(orderStatus);
+        }
+    }
+
+    /**
+     * 获取所有订单记录项
+     *
+     * @return 所有状态记录集
+     */
+    @PostMapping(params = "getAllShoppingRecords")
+    @ResponseBody
+    public Map<String,Object> getAllShoppingRecords(){
+        return shoppingRecordService.getAllShoppingRecords();
+    }
+
+    /**
+     * 通过用户id和商品id判断订单是否存在
+     *
+     * @param userId 用户id
+     * @param productId 商品id
+     * @return 判断结果
+     */
+    @PostMapping(params = "getUserProductRecord")
+    @ResponseBody
+    public Map<String,Object> getUserProductRecord(int userId,int productId){
+        String result = "false";
+        if(shoppingRecordService.getUserProductRecord(userId,productId)){
+            result = "true";
+        }
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        resultMap.put("result",result);
+        return resultMap;
+    }
 }
+
+

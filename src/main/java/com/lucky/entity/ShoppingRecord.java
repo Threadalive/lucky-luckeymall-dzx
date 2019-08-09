@@ -23,7 +23,7 @@ public class ShoppingRecord {
     /**
      * 订单创建时间
      */
-    private String createTime;
+    private long createTime;
     /**
      * 订单状态
      */
@@ -59,11 +59,11 @@ public class ShoppingRecord {
 
     @Id
     @Column(name = "create_time")
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 

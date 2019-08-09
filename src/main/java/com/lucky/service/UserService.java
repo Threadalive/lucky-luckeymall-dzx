@@ -34,7 +34,7 @@ public interface UserService {
      * @param id 用户id
      * @return 指定用户对象
      */
-    User getUser(int id);
+    Map<String,Object> getUserById(int id);
 
     /**
      * 根据用户id删除用户对象
@@ -94,7 +94,15 @@ public interface UserService {
      * 通过用户id获取用户的地址和手机号码
      *
      * @param userId 用户id
-     * @return
+     * @return 用户地址或手机号码
      */
     Map<String,Object> getUserAddressAndPhoneNumber(int userId);
+
+    /**
+     * 根据用户id获取用户详细信息
+     *
+     * @param id 用户id
+     * @return 用户详细信息结果
+     */
+    Map<String, Object> getUserDetailById(int id);
 }

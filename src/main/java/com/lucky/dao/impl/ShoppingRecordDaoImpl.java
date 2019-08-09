@@ -1,11 +1,9 @@
 package com.lucky.dao.impl;
 
 import com.lucky.dao.ShoppingRecordDao;
-import com.lucky.entity.Product;
 import com.lucky.entity.ShoppingRecord;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,8 +25,13 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
     private HibernateTemplate hibernateTemplate;
 
     @Override
-    public ShoppingRecord getShoppingRecord(int userId, int productId, String time) {
-        return null;
+    public ShoppingRecord getShoppingRecord(int userId, int productId, long createTime) {
+        String hql= "from com.lucky.entity.ShoppingRecord where userId=? and productId=? and createTime=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0,userId);
+        query.setParameter(1,productId);
+        query.setParameter(2,createTime);
+        return (ShoppingRecord) query.uniqueResult();
     }
 
     @Override
@@ -38,17 +41,46 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public boolean deleteShoppingRecord(int userId, int productId) {
-        return false;
-    }
-
-    @Override
-    public boolean updateShoppingRecord(ShoppingRecord shoppingRecord) {
+        String hql = "from com.lucky.entity.ShoppingRecord where userId=? and productId=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0,userId);
+        query.setParameter(1,productId);
         try {
-            hibernateTemplate.update(shoppingRecord);
+            hibernateTemplate.deleteAll(query.list());
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean updateShoppingRecord(ShoppingRecord shoppingRecord) {
+        //使用由于另两种方法有bug，这里使用sql直接查询
+        String sql = "update t_shopping_record set order_status="+shoppingRecord.getOrderStatus()+
+                " where user_id="+shoppingRecord.getUserId()+
+                " and product_id="+shoppingRecord.getProductId()+" and create_time='"+shoppingRecord.getCreateTime()+"'";
+
+        Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+        return query.executeUpdate()>0;
+
+//1、
+//        无法映射到具体表
+//        String hql = "update ShoppingReocrd set orderStatus=? where userId=? and productId=? and createTime=?";
+//        query.setParameter(0,shoppingRecord.getOrderStatus());
+//        query.setParameter(1,shoppingRecord.getUserId());
+//        query.setParameter(2,shoppingRecord.getProductId());
+//        query.setParameter(3,shoppingRecord.getCreateTime());
+
+//2、
+//该方法出现A different object with the same identifier value was already associated with the session 异常
+//session中已经存在一个与当前对象不同但是标识符相同的对象
+//        try {
+//            hibernateTemplate.update(shoppingRecord);
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
     }
 
     @Override
@@ -72,21 +104,45 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public List<ShoppingRecord> getShoppingRecordsByOrderStatus(int orderStatus) {
-        return null;
+        String hql = "from ShoppingRecord where orderStatus=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0, orderStatus);
+        return query.list();
     }
 
     @Override
     public boolean getUserProductRecord(int userId, int productId) {
-        return false;
+        String hql = "from ShoppingRecord where userId=? and productId=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0,userId);
+        query.setParameter(1,productId);
+        return query.list().size()>0;
     }
 
     @Override
     public boolean deleteShoppingRecordByUser(int userId) {
-        return false;
+        String hql = "from com.lucky.entity.ShoppingRecord where userId=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0,userId);
+        try {
+            hibernateTemplate.deleteAll(query.list());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean deleteShoppingRecordByProductId(int productId) {
-        return false;
+        String hql = "from com.lucky.entity.ShoppingRecord where productId=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0,productId);
+        try {
+            hibernateTemplate.deleteAll(query.list());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
