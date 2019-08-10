@@ -1,6 +1,5 @@
 package com.lucky.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
