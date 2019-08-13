@@ -5,6 +5,7 @@ import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
 import com.lucky.service.UserService;
 import com.lucky.util.Response;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,6 +24,11 @@ import java.util.*;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    /**
+     * 日志对象
+     */
+    private static final Logger logger = Logger.getLogger(UserController.class);
     /**
      * 用户服务类，供控制器调用
      */
@@ -39,6 +45,18 @@ public class UserController {
     public ModelAndView main(){
         ModelAndView view=new ModelAndView();
         view.setViewName("main");
+        return  view;
+    }
+
+    /**
+     * 返回给前台一个个人中心页面
+     *
+     * @return 个人中心页
+     */
+    @GetMapping(params = "updateSelfInfo")
+    public ModelAndView updateSelfInfo(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("/userView/update_selfinfo");
         return  view;
     }
 
@@ -67,10 +85,12 @@ public class UserController {
     @PostMapping(params = "register")
     @ResponseBody
     public Map<String, Object> doRegister(User vUser,UserDetail vUserDetail){
+        logger.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
         //参数处理判断
         if(vUser!=null&&vUserDetail!=null) {
             return userService.doRegister(vUser, vUserDetail);
         }else {
+            logger.error("==============传入参数为空==============");
             return null;
         }
     }
@@ -87,7 +107,8 @@ public class UserController {
     @PostMapping(params = "updateUser")
     @ResponseBody
     public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail){
-       return userService.updateUser(vUser,vUserDetail);
+        logger.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
+        return userService.updateUser(vUser,vUserDetail);
     }
 
     /**
@@ -105,6 +126,7 @@ public class UserController {
         String allUsers = JSONArray.toJSONString(userList);
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("allUsers",allUsers);
+        logger.info("=========取到Map："+resultMap.get("allUsers")+"==============");
         return resultMap;
     }
 
@@ -142,7 +164,7 @@ public class UserController {
      * @param userId 用户id
      * @return 用户地址，用户手机号码
      */
-    @PostMapping(params = "getUserNameAndPhoneNumber")
+    @PostMapping(params = "getUserAddressAndPhoneNumber")
     @ResponseBody
     public Map<String,Object> getUserAddressAndPhoneNumber(int userId){
         return userService.getUserAddressAndPhoneNumber(userId);
@@ -163,7 +185,7 @@ public class UserController {
             return resultMap;
         }else {
             httpSession.setAttribute("currentUser", "");
-            resultMap.put("result", "redirect:login");
+//            resultMap.put("result", "redirect:login");
             return resultMap;
         }
     }

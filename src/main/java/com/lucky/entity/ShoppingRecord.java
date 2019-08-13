@@ -4,8 +4,10 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * @Description 用户购物记录实体类
- * @Author zhenxing.dong@luckincoffee.com
+ * @Description 用户购物记录实体类，复合主键：
+ * userId、productId与createTime
+ *
+ * @Author zhenxing.dong
  * @Date 2019/8/5 17:11
  */
 @Entity

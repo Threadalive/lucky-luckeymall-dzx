@@ -12,24 +12,24 @@
 <head>
     <title>LuckyMall</title>
 </head>
-<body background="${contextPath}/bgimg/login_img02.png">
+<body style="background: url('${contextPath}/bgimg/login_img02.png');background-size: cover">
 <form id="loginForm" onsubmit="return false">
     <div class="container-fluid" style="padding-top: 80px;padding-bottom: 80px" >
-        <h1 class="title center">登录</h1>
+        <h1 class="title center">登录LuckyMall</h1>
         <br/>
         <div class="col-sm-offset-2 col-md-offest-2">
             <!-- 表单输入 -->
             <div  class="form-horizontal">
                 <div class="form-group">
-                    <label for="nameOrEmail" class="col-sm-2 col-md-2 control-label">邮箱/用户名</label>
+                    <label for="nameOrEmail" class="col-sm-2 col-md-2 control-label"></label>
                     <div class="col-sm-6 col-md-6">
-                        <input type="text" class="form-control" id="nameOrEmail" name="nameOrEmail" placeholder="xxxxxx@xx.com"/>
+                        <input type="text" class="form-control" id="nameOrEmail" value="690661404@qq.com" name="nameOrEmail" placeholder="邮箱/用户名"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="col-sm-2 col-md-2 control-label">密码</label>
+                    <label for="password" class="col-sm-2 col-md-2 control-label"></label>
                     <div class="col-sm-6 col-md-6">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="禁止输入非法字符" />
+                        <input type="password" class="form-control" id="password" name="password" value="123456" placeholder="密码" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -48,7 +48,7 @@
 <link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
 <link href="${contextPath}/css/style.css" rel="stylesheet">
 
-<script src="${contextPath}/js/jquery-3.4.1.js"></script>
+<script src="${contextPath}/js/jquery-3.4.1.min.js"></script>
 <script src="${contextPath}/js/layer.js"></script>
 <script src="${contextPath}/js/jquery.validate.min.js"></script>
 <script src="${contextPath}/js/messages_zh.js"></script>
@@ -78,7 +78,7 @@
                 }
             });
             if(loginResult == 'success'){
-                layer.msg('登录成功',{icon:1},function(){
+                layer.msg('登录成功',{icon:1,time:2000},function(){
                     window.location.href = "${contextPath}/user?main";
                 });
             }

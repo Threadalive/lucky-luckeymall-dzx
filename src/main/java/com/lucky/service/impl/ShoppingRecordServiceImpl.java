@@ -96,27 +96,27 @@ public class ShoppingRecordServiceImpl implements ShoppingRecordService {
     @Override
     public Map<String, Object> getShoppingRecordByOrderStatus(int orderStatus) {
         List<ShoppingRecord> shoppingRecordList = shoppingRecordDao.getShoppingRecordsByOrderStatus(orderStatus);
-        String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
+//        String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
         Map<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("result",shoppingRecords);
+        resultMap.put("result",shoppingRecordList);
         return resultMap;
     }
 
     @Override
     public Map<String, Object> getShoppingRecords(int userId) {
         List<ShoppingRecord> shoppingRecordList = shoppingRecordDao.getShoppingRecords(userId);
-        String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
-        Map<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("result",shoppingRecords);
+       // String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
+        Map<String,Object> resultMap = new HashMap<String,Object>(4);
+        resultMap.put("result",shoppingRecordList);
         return resultMap;
     }
 
     @Override
     public Map<String,Object> getAllShoppingRecords() {
         List<ShoppingRecord> shoppingRecordList = shoppingRecordDao.getAllShoppingRecords();
-        String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
+        //String shoppingRecords = JSONArray.toJSONString(shoppingRecordList);
         Map<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("result",shoppingRecords);
+        resultMap.put("result",shoppingRecordList);
         return resultMap;
     }
 

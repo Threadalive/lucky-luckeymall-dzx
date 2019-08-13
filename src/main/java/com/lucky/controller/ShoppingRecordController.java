@@ -49,7 +49,7 @@ public class ShoppingRecordController {
     @GetMapping(params = "shoppingRecordHandle")
     public ModelAndView getShoppingHandle() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("userView/shopping_handle");
+        view.setViewName("admin/shopping_handle");
         return view;
     }
 
@@ -115,7 +115,7 @@ public class ShoppingRecordController {
      */
     @PostMapping(params = "getAllShoppingRecords")
     @ResponseBody
-    public Map<String,Object> getAllShoppingRecords(){
+    public Map<String, Object> getAllShoppingRecords() {
         return shoppingRecordService.getAllShoppingRecords();
     }
 
@@ -135,6 +135,25 @@ public class ShoppingRecordController {
         }
         Map<String,Object> resultMap = new HashMap<String,Object>();
         resultMap.put("result",result);
+        return resultMap;
+    }
+
+    /**
+     * 根据用户id、商品id删除指定订单
+     *
+     * @param userId 用户id
+     * @param productId 商品id
+     * @return 删除结果
+     */
+    @PostMapping(params = "deleteShoppingRecord")
+    @ResponseBody
+    public Map<String,Object> deleteShoppingRecord(int userId, int productId){
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        if(shoppingRecordService.deleteShoppingRecord(userId,productId)){
+            resultMap.put("result","success");
+        }else {
+            resultMap.put("result","fail");
+        }
         return resultMap;
     }
 }

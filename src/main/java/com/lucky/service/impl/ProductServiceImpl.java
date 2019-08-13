@@ -63,9 +63,9 @@ public class ProductServiceImpl implements ProductService {
         productList = productDao.getProductsByKeyWord(searchKeyWord);
 
         //将查询到的商品数组转成JSON形式的字符串
-        String searchResult = JSONArray.toJSONString(productList);
+//        String searchResult = JSONArray.toJSONString(productList);
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("result", searchResult);
+        resultMap.put("result", productList);
         return resultMap;
     }
 
@@ -78,9 +78,9 @@ public class ProductServiceImpl implements ProductService {
     public Map<String, Object> getAllProduct() {
         List<Product> productList = new ArrayList<>();
         productList = productDao.getAllProduct();
-        String allProducts = JSONArray.toJSONString(productList);
+//        String allProducts = JSONArray.toJSONString(productList);
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("allProducts", allProducts);
+        resultMap.put("allProducts", productList);
         return resultMap;    }
 
     @Override
@@ -95,9 +95,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Object> getProductById(int id) {
         Product product = productDao.getProduct(id);
-        String searchResult = JSONArray.toJSONString(product);
+//        String searchResult = JSONArray.toJSONString(product);
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("result", searchResult);
+        resultMap.put("result", product);
         return resultMap;
     }
 }

@@ -12,7 +12,7 @@
 <head>
     <title>注册</title>
 </head>
-<body>
+<body background="${contextPath}/bgimg/login_img01.jpg">
 <form id="signupForm" onsubmit="return false">
 <div class="container-fluid">
     <h1 class="title center">注册</h1>
@@ -116,7 +116,7 @@
 
             var registerResult = null;
             $.ajax({
-                async: false, //设置同步
+                // async: false, //设置同步
                 type: 'POST',
                 url: '${contextPath}/user?register',
                 data: user,
@@ -149,7 +149,7 @@
         }
     });
 
-    $().ready(function () {
+    $(function () {
         // 在键盘按下并释放及提交后验证提交表单
         $("#signupForm").validate({
 

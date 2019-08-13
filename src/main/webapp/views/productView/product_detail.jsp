@@ -63,9 +63,9 @@
             </table>
             <div class="row">
                 <div class="col-sm-1 col-md-1 col-lg-1"></div>
-                <button class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingCar(${productDetail.id})">添加购物车</button>
+                <button class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingCar('${productDetail.id}')">添加购物车</button>
                 <div class="col-sm-2 col-md-2 col-lg-2"></div>
-                <button  class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="buyConfirm(${productDetail.id})">立即购买</button>
+                <button  class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="buyConfirm('${productDetail.id}')">立即购买</button>
             </div>
         </div>
     </div>
@@ -89,9 +89,9 @@
 <link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
 <link href="${contextPath}/css/style.css" rel="stylesheet">
 
-<script src="${contextPath}/js/jquery.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${contextPath}/js/jquery-3.4.1.min.js" type="text/javascript"></script>
 <script src="${contextPath}/js/layer.js" type="text/javascript"></script>
+<script src="${contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 
 <script src="${contextPath}/js/html5shiv.min.js"></script>
 <script src="${contextPath}/js/respond.min.js"></script>
@@ -102,36 +102,35 @@
 
     // 添加购物车功能
     function addToShoppingCar(productId) {
-        judgeIsLogin();
+        if(judgeIsLogin()){
         var productCounts = $("#productCounts");
         // 取购买数量
         var counts = parseInt(productCounts.html());
         var shoppingCar = {};
-        shoppingCar.userId = ${currentUser.id};
+        shoppingCar.userId = "${currentUser.id}";
         shoppingCar.productId = productId;
         shoppingCar.counts = counts;
-        var addResult = "";
         $.ajax({
-            async : false,
+            async: false,
             type : 'POST',
-            url : '${contextPath}/addShoppingCar',
+            url : '${contextPath}/shoppingCar?addShoppingCar',
             data : shoppingCar,
             dataType : 'json',
             success : function(result) {
-                addResult = result.result;
+                if(result.result == "success") {
+                    layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
+                        function(){
+                            window.location.href = "${contextPath}/shoppingCar";
+                        },
+                        function(index){
+                            layer.close(index);}
+                    );
+                }
             },
             error : function(result) {
                 layer.alert('查询用户错误');
             }
         });
-        if(addResult == "success") {
-            layer.confirm('前往购物车？', {icon: 1, title:'添加成功',btn:['前往购物车','继续浏览']},
-                function(){
-                    window.location.href = "${contextPath}/shopping_car";
-                },
-                function(index){
-                    layer.close(index);}
-            );
         }
     }
     // 减少商品数量
@@ -156,8 +155,10 @@
 
     // 立即购买
     function buyConfirm(productId) {
-        var address = getUserAddress(${currentUser.id});
-        var phoneNumber = getUserPhoneNumber(${currentUser.id});
+
+        if(judgeIsLogin()){
+        var address = getUserAddress('${currentUser.id}');
+        var phoneNumber = getUserPhoneNumber('${currentUser.id}');
         // 购买数量
         var productCounts = $("#productCounts");
         var counts = parseInt(productCounts.html());
@@ -199,44 +200,44 @@
             type:1,
             title:'请确认订单信息：',
             content:html,
-            area:['650px','350px'],
+            area:['650px','350px']
         });
+        }
     }
 
     // 添加到订单记录
     function addToShoppingRecords(productId) {
-        judgeIsLogin();
+        if(judgeIsLogin()){
         var productCounts = $("#productCounts");
         var counts = parseInt(productCounts.html());
         var shoppingRecord = {};
-        shoppingRecord.userId = ${currentUser.id};
+        shoppingRecord.userId = '${currentUser.id}';
         shoppingRecord.productId = productId;
         shoppingRecord.counts = counts;
-        var buyResult = "";
         $.ajax({
-            async : false,
+            async: false,
             type : 'POST',
             url : '${contextPath}/shoppingRecord?addShoppingRecord',
             data : shoppingRecord,
             dataType : 'json',
             success : function(result) {
-                buyResult = result.result;
+                if(result.result == "success") {
+                    layer.confirm('购买成功!前往订单详情？', {icon: 1, title:'购买成功',btn:['前往订单','继续购买']},
+                        function(){
+                            window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+                        },
+                        function(index){
+                            layer.close(index);}
+                    );
+                }
+                else if(buyResult == "unEnough"){
+                    layer.alert("库存不足，亲下回再买哦~")
+                }
             },
             error : function(result) {
                 layer.alert('出错咯~再试试吧');
             }
         });
-        if(buyResult == "success") {
-            layer.confirm('购买成功!前往订单详情？', {icon: 1, title:'购买成功',btn:['前往订单','继续购买']},
-                function(){
-                    window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
-                },
-                function(index){
-                    layer.close(index);}
-            );
-        }
-        else if(buyResult == "unEnough"){
-            layer.alert("库存不足，亲下回再买哦~")
         }
     }
 
@@ -269,68 +270,58 @@
 
     // 根据用户id和商品id查询订单是否存在
     function getUserProductRecord() {
-        var results = "";
         var product = {};
-        product.userId = ${currentUser.id};
-        product.productId = ${productDetail.id};
+        product.userId = '${currentUser.id}';
+        product.productId = '${productDetail.id}';
         $.ajax({
-            async : false, //设置同步
             type : 'POST',
             url : '${contextPath}/shoppingRecord?getUserProductRecord',
             data : product,
             dataType : 'json',
             success : function(result) {
-                results = result.result;
+                return result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        return results;
     }
 
     // 获取评价
     function getEvaluations() {
         var evaluations = "";
         var product = {};
-        product.productId = ${productDetail.id};
+        product.productId = '${productDetail.id}';
         $.ajax({
-            async : false, //设置同步
             type : 'POST',
             url : '${contextPath}/getShoppingEvaluations',
             data : product,
             dataType : 'json',
             success : function(result) {
-                evaluations = result.result;
+                return result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        evaluations = eval("("+evaluations+")");
-        return evaluations;
     }
 
     // 根据id获取指定用户对象
     function getUserById(id) {
-        var userResult = "";
         var user = {};
         user.id = id;
         $.ajax({
-            async : false, //设置同步
             type : 'POST',
             url : '${contextPath}/user?getUserById',
             data : user,
             dataType : 'json',
             success : function(result) {
-                userResult = result.result;
+                return result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        userResult = JSON.parse(userResult);
-        return userResult;
     }
 
     // 根基商品id获取具体商品对象
@@ -339,7 +330,7 @@
         var product = {};
         product.id = id;
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
             url : '${contextPath}/product?getProductById',
             data : product,
@@ -351,19 +342,18 @@
                 layer.alert('查询错误');
             }
         });
-        productResult = JSON.parse(productResult);
         return productResult;
     }
 
     // 根据用户id获取地址信息
     function getUserAddress(id) {
-        var address = "";
         var user = {};
         user.userId = id;
+        var address = "";
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
-            url : '${contextPath}/user?getUserNameAndPhoneNumber',
+            url : '${contextPath}/user?getUserAddressAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
@@ -378,17 +368,17 @@
 
     // 根据用户id获取电话号码
     function getUserPhoneNumber(id) {
-        var phoneNumber = "";
         var user = {};
         user.userId = id;
+        var phoneNumber = "";
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
-            url : '${contextPath}/user?getUserNameAndPhoneNumber',
+            url : '${contextPath}/user?getUserAddressAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
-                phoneNumber = result.phoneNumber;
+               phoneNumber = result.phoneNumber;
             },
             error : function(result) {
                 layer.alert('查询错误');
@@ -399,37 +389,39 @@
 
     // 使用jstl根据session中的currentUser属性判断用户是否已登录，否则跳转至登陆界面
     function judgeIsLogin() {
-        if("${currentUser.id}" == null || "${currentUser.id}" == undefined || "${currentUser.id}" ==""){
-            layer.msg('您还没有登陆哦，请先登陆吧~',{icon:1},function(){
+        var isLogined=false;
+        <c:if test="${not empty currentUser and not empty currentUser.id}">
+        isLogined=true;
+        </c:if>
+        if(!isLogined){
+            layer.msg('您还没有登陆哦，请先登陆吧~',{icon:1,time:1000},function(){
                 window.location.href="${contextPath}/login";
             });
         }
+        return isLogined;
     }
 
     function addToEvaluation() {
         var inputText = $("#evaluationText").val();
         var evaluation = {};
-        evaluation.userId = ${currentUser.id};
-        evaluation.productId = ${productDetail.id};
+        evaluation.userId = '${currentUser.id}';
+        evaluation.productId = '${productDetail.id}';
         evaluation.content = inputText;
-        var addResult = "";
         $.ajax({
-            async : false,
             type : 'POST',
             url : '${contextPath}/addShoppingEvaluation',
             data : evaluation,
             dataType : 'json',
             success : function(result) {
-                addResult = result.result;
+                if(result.result = "success"){
+                    layer.msg("评价成功",{icon:1});
+                    window.location.href = "${contextPath}/product_detail";
+                }
             },
             error : function(result) {
                 layer.alert('查询用户错误');
             }
         });
-        if(addResult = "success"){
-            layer.msg("评价成功",{icon:1});
-            window.location.href = "${contextPath}/product_detail";
-        }
     }
 </script>
 </html>

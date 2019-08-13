@@ -31,6 +31,7 @@ public class LoginController {
      *
      * @return 登陆页视图
      */
+
     @GetMapping
     public ModelAndView login(){
         ModelAndView view=new ModelAndView();

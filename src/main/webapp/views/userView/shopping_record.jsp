@@ -63,15 +63,6 @@
 <%--页尾--%>
 <jsp:include page="../includeView/foot.jsp" />
 
-<link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link href="${contextPath}/css/style.css" rel="stylesheet">
-
-<script src="${contextPath}/js/jquery.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/layer.js" type="text/javascript"></script>
-<script src="${contextPath}/js/html5shiv.min.js"></script>
-<script src="${contextPath}/js/respond.min.js"></script>
-
 <script type="text/javascript">
     var loading = layer.load(0);
 
@@ -100,6 +91,7 @@
 
         // 获取所有订单
         var allShoppingRecords = getShoppingRecords();
+
 
         unHandleTable.html("");
         transportTable.html("");
@@ -264,35 +256,51 @@
 
     // 根基商品id获取具体商品对象
     function getProductById(id) {
-        var productResult = "";
         var product = {};
         product.id = id;
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
             url : '${contextPath}/product?getProductById',
             data : product,
             dataType : 'json',
             success : function(result) {
-                productResult = result.result;
+                product = result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        productResult = JSON.parse(productResult);
-        return productResult;
+        return product;
     }
 
     // 根据用户id获取地址信息
     function getUserAddress(id) {
-        var address = "";
         var user = {};
         user.userId = id;
         $.ajax({
-            async : false, //设置同步
             type : 'POST',
             url : '${contextPath}/user?getUserNameAndPhoneNumber',
+            data : user,
+            dataType : 'json',
+            success : function(result) {
+                return result.address;
+            },
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+    }
+
+    // 根据用户id获取地址信息
+    function getUserAddress(id) {
+        var user = {};
+        user.userId = id;
+        var address = "";
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/user?getUserAddressAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
@@ -307,13 +315,13 @@
 
     // 根据用户id获取电话号码
     function getUserPhoneNumber(id) {
-        var phoneNumber = "";
         var user = {};
         user.userId = id;
+        var phoneNumber = "";
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
-            url : '${contextPath}/user?getUserNameAndPhoneNumber',
+            url : '${contextPath}/user?getUserAddressAndPhoneNumber',
             data : user,
             dataType : 'json',
             success : function(result) {
@@ -328,65 +336,65 @@
 
     // 使用jstl根据session中的currentUser属性判断用户是否已登录，否则跳转至登陆界面
     function judgeIsLogin() {
-        if("${currentUser.id}" == null || "${currentUser.id}" == undefined || "${currentUser.id}" ==""){
-            layer.msg('您还没有登陆哦，请先登陆吧~',{icon:1},function(){
+        var isLogined=false;
+        <c:if test="${not empty currentUser and not empty currentUser.id}">
+        isLogined=true;
+        </c:if>
+        if(!isLogined){
+            layer.confirm('您还没有登陆哦，请先登陆吧~',{icon:1},function(){
                 window.location.href="${contextPath}/login";
             });
         }
+        return isLogined;
     }
     // 用于用户获取所有的订单记录
     function getShoppingRecords() {
         // 判断用户是否登录
-        judgeIsLogin();
-
-        var shoppingRecordProducts = "";
+        if(judgeIsLogin()){
         var user = {};
         user.userId = ${currentUser.id};
+        var allShoppingRecord = "";
         $.ajax({
-            async : false, //设置同步
+            async: false,
             type : 'POST',
             url : '${contextPath}/shoppingRecord?getShoppingRecords',
             data : user,
             dataType : 'json',
             success : function(result) {
-                shoppingRecordProducts = result.result;
+                allShoppingRecord = result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
-        // 解析返回的json字符串信息
-        shoppingRecordProducts = eval("("+shoppingRecordProducts+")");
-        return shoppingRecordProducts;
+        return allShoppingRecord;
+    }
     }
     // 设置点击收获后更改订单状态
     function receiveProducts(userId,productId,createTime) {
         layer.confirm('您确定收到货了嘛？',{icon: 3, title:'提示'},function (loading) {
-            var receiveResult = "";
             var shoppingRecord = {};
             shoppingRecord.userId = userId;
             shoppingRecord.productId = productId;
             shoppingRecord.createTime = createTime;
             shoppingRecord.orderStatus = 2;
             $.ajax({
-                async : false, //设置同步
                 type : 'POST',
                 url : '${contextPath}/shoppingRecord?updateShoppingRecords',
                 data : shoppingRecord,
                 dataType : 'json',
                 success : function(result) {
-                    receiveResult = result.result;
+                    if(result.result == "success"){
+                        layer.msg('收货成功',{icon:1},function(){
+                            window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+                        });
+                        layer.close(loading);
+                    }
                 },
                 error : function(result) {
                     layer.alert('收货失败啦，再试一次吧~');
                 }
             });
-            if(receiveResult == "success"){
-                layer.msg('收货成功',{icon:1},function(){
-                    window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
-                });
-            layer.close(loading);
-            }
         });
     }
 
@@ -396,23 +404,21 @@
         var jumpResult = '';
         product.id = id;
         $.ajax({
-            async : false, //设置同步
             type : 'POST',
             url : '${contextPath}/product?getProductDetail',
             data : product,
             dataType : 'json',
             success : function(result) {
-                jumpResult = result.result;
+                if(result.result == "success"){
+                    layer.msg('即将进入详情页面~',{icon:1},function(){
+                        window.location.href = "${contextPath}/product?getProductDetail";
+                    });
+                }
             },
             error : function(resoult) {
                 layer.alert('查询错误');
             }
         });
-        if(jumpResult == "success"){
-            layer.msg('即将进入详情页面~',{icon:1},function(){
-                window.location.href = "${contextPath}/product?getProductDetail";
-            });
-        }
     }
 </script>
 </html>

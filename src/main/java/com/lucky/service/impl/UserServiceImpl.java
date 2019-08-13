@@ -51,9 +51,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getUserById(int id) {
         User user = userDao.getUser(id);
-        String result = JSON.toJSONString(user);
+//        String result = JSON.toJSONString(user);
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("result", result);
+        resultMap.put("result", user);
         return resultMap;
     }
 
@@ -87,9 +87,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getUserDetailById(int id) {
         UserDetail userDetail = userDetailService.getUserDetail(id);
-        String result = JSON.toJSONString(userDetail);
+//        String result = JSON.toJSONString(userDetail);
         Map<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("result",result);
+        resultMap.put("result",userDetail);
         return resultMap;
     }
 

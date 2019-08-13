@@ -26,7 +26,7 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public ShoppingRecord getShoppingRecord(int userId, int productId, long createTime) {
-        String hql= "from com.lucky.entity.ShoppingRecord where userId=? and productId=? and createTime=?";
+        String hql= "from ShoppingRecord where userId=? and productId=? and createTime=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0,userId);
         query.setParameter(1,productId);
@@ -41,7 +41,7 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public boolean deleteShoppingRecord(int userId, int productId) {
-        String hql = "from com.lucky.entity.ShoppingRecord where userId=? and productId=?";
+        String hql = "from ShoppingRecord where userId=? and productId=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0,userId);
         query.setParameter(1,productId);

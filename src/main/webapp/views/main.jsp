@@ -73,15 +73,6 @@
 </div>
 </body>
 
-<link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link href="${contextPath}/css/style.css" rel="stylesheet">
-
-<script src="${contextPath}/js/jquery.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/layer.js" type="text/javascript"></script>
-<script src="${contextPath}/js/html5shiv.min.js"></script>
-<script src="${contextPath}/js/js/respond.min.js"></script>
-
 <script type="text/javascript">
     var loading = layer.load(0);
 
@@ -154,7 +145,6 @@
                 layer.alert('查询失败');
             }
         });
-        allProducts = eval("("+allProducts+")");
         return allProducts;
     }
 

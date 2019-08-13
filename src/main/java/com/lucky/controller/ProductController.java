@@ -52,7 +52,7 @@ public class ProductController {
     @GetMapping(params = "search")
     public ModelAndView search() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("product/search");
+        view.setViewName("productView/search");
         return view;
     }
 
