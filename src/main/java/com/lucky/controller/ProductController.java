@@ -11,8 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,30 +154,6 @@ public class ProductController {
     @PostMapping(params = "uploadFile")
     @ResponseBody
     public Map<String, Object> uploadFile(@RequestParam MultipartFile productImgUpload, String productName, HttpServletRequest request) {
-        String result = "fail";
-        try {
-            //当productImgUpload不为空时
-            if (productImgUpload != null && !productImgUpload.isEmpty()) {
-                //通过请求获取文件夹的路径
-                String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
-                //根据获取的商品id选取img文件夹下的对应图片的文件名
-                int id = productService.getProduct(productName).getId();
-                String imgFileName = String.valueOf(id) + ".jpg";
-                File fileFolder = new File(fileRealPath);
-                //若文件夹不存在则创建一个
-                if (!fileFolder.exists()) {
-                    fileFolder.mkdirs();
-                }
-                //获取具体文件，进行上传
-                File file = new File(fileRealPath, imgFileName);
-                productImgUpload.transferTo(file);
-                result = "success";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("result", result);
-        return resultMap;
+        return productService.uploadFile(productImgUpload,productName,request);
     }
 }

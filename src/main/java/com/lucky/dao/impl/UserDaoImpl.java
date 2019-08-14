@@ -49,13 +49,6 @@ public class UserDaoImpl implements UserDao {
             query.setParameter(0, nameOrEmail);
         }
         return (User)query.uniqueResult();
-
-//        User user = (User) hibernateTemplate.find(hql,new String[]{nameOrEmail, nameOrEmail});
-//        if(user == null){
-//            return null;
-//        }else {
-//            return user;
-//        }
     }
 
     @Override
@@ -76,9 +69,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean updateUser(User user) {
         try {
-            hibernateTemplate.update(user);
+            User user1 = hibernateTemplate.get(User.class,user.getId());
+            user1.setNickName(user.getNickName());
+            user1.setUserName(user.getUserName());
+            user1.setEmail(user.getEmail());
+            hibernateTemplate.update(user1);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

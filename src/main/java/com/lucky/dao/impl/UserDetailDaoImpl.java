@@ -53,7 +53,14 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Override
     public boolean updateUserDetail(UserDetail userDetail) {
         try {
-            hibernateTemplate.update(userDetail);
+            UserDetail userDetail1 = hibernateTemplate.get(UserDetail.class,userDetail.getId());
+            userDetail1.setSex(userDetail.getSex());
+            userDetail1.setAddress(userDetail.getAddress());
+            userDetail1.setPostNumber(userDetail.getPostNumber());
+            userDetail1.setBirthday(userDetail.getBirthday());
+            userDetail1.setPhoneNumber(userDetail.getPhoneNumber());
+            userDetail1.setPassword(userDetail.getPassword());
+            hibernateTemplate.update(userDetail1);
             return true;
         } catch (Exception e) {
             return false;

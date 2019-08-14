@@ -1,10 +1,10 @@
+package com.lucky.util;
 /**
- * @Description TODO
- * @Author zhenxing.dong@luckincoffee.com
+ * @Description 操作状态类，记录某些操作如删除的执行状态
+ *
+ * @Author zhenxing.dong
  * @Date 2019/8/2 11:17
  */
-package com.lucky.util;
-
 public class Response {
 
     public int status;

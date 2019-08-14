@@ -28,7 +28,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="${contextPath}/user?main" style="color: crimson;font-size: x-large;font-family: fantasy">LuckyMall</a>
-            <img src="${contextPath}/bgimg/tel.gif" style="position: absolute;bottom: 11px;right: 380px;" onclick="call()" />
+            <img src="${contextPath}/bgimg/tel.gif" style="position: absolute;bottom: 11px;right: 430px;" onclick="call()" />
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
@@ -39,7 +39,7 @@
                 </c:if>
                 <c:if test="${not empty currentUser}">
                     <c:if test="${currentUser.role == 1}">
-                        <li><a href="${contextPath}/admin/control" methods="post">控制台</a></li>
+                        <li><a href="${contextPath}/user?control">控制台</a></li>
                     </c:if>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
@@ -54,7 +54,7 @@
                             </c:if>
                             <li role="separator" class="divider"></li>
                             <li><a href="${contextPath}/user?updateSelfInfo">个人资料修改</a></li>
-                            <li><a href="${contextPath}/user?doLogout">注销登录</a></li>
+                            <li><a href="" onclick="doLogout()">注销登录</a></li>
                         </ul>
                     </li>
                 </c:if>
@@ -107,6 +107,28 @@
     function call(){
         layer.msg('详情请致电 18160744093~',{icon:1,time:4000}
         );
+    }
+    function doLogout() {
+        var message = "";
+        var logoutResult="";
+        $.ajax({
+            async : false,
+            type : 'POST',
+            url : '${contextPath}/user?doLogout',
+            data : message,
+            dataType : 'json',
+            success : function(result) {
+                logoutResult = result.result;
+            },
+            error : function(result) {
+                layer.alert('查询失败咯');
+            }
+        });
+        if(logoutResult == "success")
+            layer.msg('用户已退出',{icon:1,time:2000},function () {
+                window.location.href = "${contextPath}/user?main";
+                }
+            );
     }
 </script>
 </html>

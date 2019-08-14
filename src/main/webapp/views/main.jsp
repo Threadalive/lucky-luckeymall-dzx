@@ -72,7 +72,6 @@
     </div>
 </div>
 </body>
-
 <script type="text/javascript">
     var loading = layer.load(0);
 
@@ -117,7 +116,7 @@
             var productArea = document.getElementById(id);
             if(mark[allProduct[i].type] == 0){
                 //填充后的区域置1
-                html ='<hr/><h1>'+productType[allProduct[i].type]+'</h1><hr/>'+html;
+                html ='<hr/><h1 style="color: darkslategray;">'+productType[allProduct[i].type]+'</h1><hr/>'+html;
                 mark[allProduct[i].type] = 1;
             }
             productArea.innerHTML += html;

@@ -161,50 +161,51 @@
         var address = getUserAddress(${currentUser.id});
         var phoneNumber = getUserPhoneNumber(${currentUser.id});
         var totalPrice = 0;
-
-        var html = '<div class="col-sm-1 col-md-1 col-lg-1"></div>'+
-            '<div class="col-sm-10 col-md-10 col-lg-10">'+
-            '<table class="table confirm-margin">';
-        for(var i=0;i<productsId.length;i++){
-            var product = getProductById(productsId[i]);
-            html +=	'<tr>'+
-                '<th>商品'+(i+1)+'名称：</th>'+
-                '<td>'+product.productName+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                '<th>商品单价：</th>'+
-                '<td>'+product.price+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                '<th>购买数量：</th>'+
-                '<td>'+productsCounts[i]+'</td>'+
-                '</tr>'+
-                '<tr>';
-            totalPrice+=product.price*productsCounts[i];
+        if(address!=""&&address!=null) {
+            var html = '<div class="col-sm-1 col-md-1 col-lg-1"></div>' +
+                '<div class="col-sm-10 col-md-10 col-lg-10">' +
+                '<table class="table confirm-margin">';
+            for (var i = 0; i < productsId.length; i++) {
+                var product = getProductById(productsId[i]);
+                html += '<tr>' +
+                    '<th>商品' + (i + 1) + '名称：</th>' +
+                    '<td>' + product.productName + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<th>商品单价：</th>' +
+                    '<td>' + product.price + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<th>购买数量：</th>' +
+                    '<td>' + productsCounts[i] + '</td>' +
+                    '</tr>' +
+                    '<tr>';
+                totalPrice += product.price * productsCounts[i];
+            }
+            html += '<th>总金额：</th>' +
+                '<td>' + totalPrice + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<th>收货地址：</th>' +
+                '<td>' + address + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<th>联系电话：</th>' +
+                '<td>' + phoneNumber + '</td>' +
+                '</tr>' +
+                '</table>' +
+                '<div class="row">' +
+                '<div class="col-sm-4 col-md-4 col-lg-4"></div>' +
+                '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecordsPre([' + productsId + '],[' + productsCounts + '])">确认购买</button>' +
+                '</div>' +
+                '</div>';
+            layer.open({
+                type: 1,
+                title: '请确认订单信息：',
+                content: html,
+                area: ['650px', '350px'],
+            });
         }
-        html +='<th>总金额：</th>'+
-            '<td>'+totalPrice+'</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<th>收货地址：</th>'+
-            '<td>'+address+'</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<th>联系电话：</th>'+
-            '<td>'+phoneNumber+'</td>'+
-            '</tr>'+
-            '</table>'+
-            '<div class="row">'+
-            '<div class="col-sm-4 col-md-4 col-lg-4"></div>'+
-            '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecordsPre(['+productsId+'],['+productsCounts+'])">确认购买</button>'+
-            '</div>'+
-            '</div>';
-        layer.open({
-            type:1,
-            title:'请确认订单信息：',
-            content:html,
-            area:['650px','350px'],
-        });
     }
 
 
@@ -226,7 +227,13 @@
                 layer.alert('查询错误');
             }
         });
-        return address;
+        if(address==""|address==null){
+            layer.msg('请先补充地址信息哦！',{icon:1},function(){
+                window.location.href="${contextPath}/user?updateSelfInfo";
+            });
+        }else {
+            return address;
+        }
     }
 
     // 根据用户id获取电话号码

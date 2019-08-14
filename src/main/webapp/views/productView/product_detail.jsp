@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-sm-1 col-md-1"></div>
         <div class="col-sm-10 col-md-10">
-            <h1>${productDetail.productName}</h1>
+            <h1 style="color: dimgrey;font-family: cursive;">${productDetail.productName}</h1>
             <hr/>
         </div>
     </div>
@@ -91,15 +91,6 @@
 
 
 </body>
-<link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link href="${contextPath}/css/style.css" rel="stylesheet">
-
-<script src="${contextPath}/js/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script src="${contextPath}/js/layer.js" type="text/javascript"></script>
-<script src="${contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-
-<script src="${contextPath}/js/html5shiv.min.js"></script>
-<script src="${contextPath}/js/respond.min.js"></script>
 
 <script type="text/javascript">
 
@@ -163,8 +154,10 @@
 
         if(judgeIsLogin()){
         var address = getUserAddress('${currentUser.id}');
+
         var phoneNumber = getUserPhoneNumber('${currentUser.id}');
         // 购买数量
+      if(address!=""&&address!=null){
         var productCounts = $("#productCounts");
         var counts = parseInt(productCounts.html());
         var product = getProductById(productId);
@@ -207,6 +200,7 @@
             content:html,
             area:['650px','350px']
         });
+        }
         }
     }
 
@@ -380,7 +374,13 @@
                 layer.alert('查询错误');
             }
         });
-        return address;
+        if(address==""|address==null){
+            layer.msg('请先补充地址信息哦！',{icon:1},function(){
+                window.location.href="${contextPath}/user?updateSelfInfo";
+            });
+        }else {
+            return address;
+        }
     }
 
     // 根据用户id获取电话号码
@@ -440,8 +440,9 @@
             }
         });
         if(flag = "success"){
-            layer.msg("评价成功",{icon:1});
-            window.location.href = "${contextPath}/product?getProductDetail";
+            layer.msg("评价成功",{icon:1},function () {
+                window.location.href = "${contextPath}/product?getProductDetail";
+            });
         }
     }
 </script>

@@ -1,6 +1,8 @@
 package com.lucky.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.lucky.dao.CommentDao;
+import com.lucky.dao.ShoppingCarDao;
+import com.lucky.dao.ShoppingRecordDao;
 import com.lucky.dao.UserDao;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
@@ -32,6 +34,23 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     /**
+     * 商品评论的dao层类
+     */
+    @Autowired
+    private CommentDao commentDao;
+
+    /**
+     * 购物车的dao层类
+     */
+    @Autowired
+    private ShoppingCarDao shoppingCarDao;
+
+    /**
+     * 订单的dao层类
+     */
+    @Autowired
+    private ShoppingRecordDao shoppingRecordDao;
+    /**
      * 用户细节信息管理的服务类.
      */
     @Autowired
@@ -51,16 +70,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getUserById(int id) {
         User user = userDao.getUser(id);
-//        String result = JSON.toJSONString(user);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("result", user);
         return resultMap;
     }
 
+    /**
+     * 事务执行，出错回滚防止删除部分数据
+     */
+    @Transactional
     @Override
     public Response deleteUser(int id) {
-        //待补......
-        return null;
+        //判断此用户是否存在购买记录、评价记录、购物车记录，如果存在，则应该先删除对应的记录，否则后续删除会出错
+        try {
+            commentDao.deleteCommentByUserId(id);
+            shoppingCarDao.deleteShoppingCarByUserId(id);
+            shoppingRecordDao.deleteShoppingRecordByUser(id);
+            userDetailService.deleteUserDetail(id);
+            userDao.deleteUser(id);
+            //删除后设置对应状态
+            return new Response(1, "删除成功", null);
+        }catch (Exception e) {
+            return new Response(0, "删除失败", null);
+        }
     }
 
     @Override
@@ -87,7 +119,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getUserDetailById(int id) {
         UserDetail userDetail = userDetailService.getUserDetail(id);
-//        String result = JSON.toJSONString(userDetail);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         resultMap.put("result",userDetail);
         return resultMap;
@@ -132,17 +163,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail){
+    public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail,String oldUserName){
         String result = "";
-        User user = getUser(vUser.getUserName());
+        User user = getUser(oldUserName);
         if(user == null){
             //若用户不存在，返回result为fail
             result = "fail";
         }else {
             //设置用户对象基本信息
             updateUser(vUser);
-            //设置用户对象详细信息
-            UserDetail userDetail = userDetailService.getUserDetail(user.getId());
             userDetailService.updateUserDetail(vUserDetail);
             //设置成功将resul设置为success
             result = "success";

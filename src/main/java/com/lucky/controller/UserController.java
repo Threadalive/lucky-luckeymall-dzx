@@ -1,6 +1,5 @@
 package com.lucky.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
 import com.lucky.service.UserService;
@@ -48,6 +47,17 @@ public class UserController {
         return  view;
     }
 
+    /**
+     * 给前台返回一个控制台页面
+     *
+     * @return 控制台页面
+     */
+    @GetMapping(params = "control")
+    public ModelAndView control(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("admin/control");
+        return  view;
+    }
     /**
      * 返回给前台一个个人中心页面
      *
@@ -106,26 +116,24 @@ public class UserController {
      */
     @PostMapping(params = "updateUser")
     @ResponseBody
-    public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail){
+    public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail,String oldUserName){
         logger.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
-        return userService.updateUser(vUser,vUserDetail);
+        return userService.updateUser(vUser,vUserDetail,oldUserName);
     }
 
     /**
      * 获取所有的用户信息以JSON字符串形式作为值存与Map中返回给前台。
      *
-     * @return 获取到的JSON字符串类型的用户对象列表
+     * @return 用户对象列表
      */
-    @GetMapping(params = "getAllUser")
+    @PostMapping(params = "getAllUser")
     @ResponseBody
     public Map<String,Object> getAllUser(){
         List<User> userList = new ArrayList<>();
         userList = userService.getAllUser();
 
-        //将数组中对象信息转为JSON键值对字符串形式
-        String allUsers = JSONArray.toJSONString(userList);
         Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("allUsers",allUsers);
+        resultMap.put("allUsers",userList);
         logger.info("=========取到Map："+resultMap.get("allUsers")+"==============");
         return resultMap;
     }
@@ -180,14 +188,10 @@ public class UserController {
     @ResponseBody
     public Map<String,Object> doLogout(HttpSession httpSession){
         Map<String, Object> resultMap = new HashMap<>();
-        if(httpSession.getAttribute("currentUser")==null){
-            resultMap.put("result","noUser");
+            httpSession.removeAttribute("currentUser");
+            logger.info("用户已退出");
+            resultMap.put("result", "success");
             return resultMap;
-        }else {
-            httpSession.setAttribute("currentUser", "");
-//            resultMap.put("result", "redirect:login");
-            return resultMap;
-        }
     }
 
     /**

@@ -12,16 +12,16 @@
 <head>
     <title>个人中心</title>
 </head>
-<body>
+<body style="background: url('${contextPath}/bgimg/login_img02.png');background-size: cover">
 <jsp:include page="../includeView/head.jsp" />
 
 <form id="updateForm" onsubmit="return false">
     <div class="container-fluid">
-        <h1 class="title center">个人信息修改</h1>
+        <h1 class="title center" style="color: silver;font-family: fantasy;">个人信息修改</h1>
         <br/>
         <div class="col-sm-offset-2 col-md-offest-2">
             <!-- 表单输入 -->
-            <div  class="form-horizontal">
+            <div  class="form-horizontal" style="width: 600px;position: relative;left: 180px">
                 <div class="form-group">
                     <label for="userName" class="col-sm-2 col-md-2 control-label">用户名</label>
                     <div class="col-sm-6 col-md-6">
@@ -110,67 +110,58 @@
         var user = getUserById(userId);
         var userDetail = getUserDetailById(userId);
 
-        document.getElementById("inputUserName").value = user.name;
-        document.getElementById("inputEmail").value = user.email;
-        document.getElementById("inputNickname").value = user.nickName;
-        document.getElementById("inputPassword").value = userDetail.password;
-        document.getElementById("inputPhoneNumber").value = userDetail.phoneNumber;
-        document.getElementById("birthday").value = userDetail.birthday;
-        document.getElementById("postcodes").value = userDetail.postNumber;
-        document.getElementById("address").value = userDetail.address;
+        $("#userName").val(user.userName);
+        $("#email").val(user.email);
+        $("#nickName").val(user.nickName);
+        $("#password").val(userDetail.password);
+        $("#confirm_password").val(userDetail.password);
+        $("#phoneNumber").val(userDetail.phoneNumber);
+        $("#birthday").val(userDetail.birthday);
+        $("#postNumber").val(userDetail.postNumber);
+        $("#address").val(userDetail.address);
         if(userDetail.sex == 0)
-            document.getElementById("man").checked = true;
-        else
-            document.getElementById("woman").checked = true;
+            $("#man").checked = true;
+        else {
+            $("#woman").checked = true;
+        }
     }
-
-
-
 
     $.validator.setDefaults({
         submitHandler: function () {
             var loading = layer.load(0);
 
             var user = $('form').serializeArray();
-
-            var registerResult = null;
+            user.push({name: "oldUserName", value: "${currentUser.userName}"});
+            user.push({name: "id", value: "${currentUser.id}"});
+            var updateResult = null;
             $.ajax({
-                // async: false, //设置同步
+                async: false, //设置同步
                 type: 'POST',
-                url: '${contextPath}/user?register',
+                url: '${contextPath}/user?updateUser',
                 data: user,
                 dataType: 'json',
                 success: function (data) {
-                    registerResult = data.result;
+                    updateResult = data.result;
                 },
                 error: function (data) {
-                    layer.alert("用户注册失败",{icon:3});
+                    layer.alert("用户信息更新失败",{icon:3});
                 }
             });
-
-            if (registerResult == 'success') {
-                layer.msg('注册成功！即将进入登入页',{icon:1},function(){
-                    window.location.href="${contextPath}/login";
+            if (updateResult == 'success') {
+                layer.msg('更新成功！',{icon:1},function(){
+                    window.location.href="${contextPath}/user?main";
                 });
             }
-            else if (registerResult == 'nameExist') {
+            else if (updateResult == 'fail') {
                 layer.close(loading);
-                layer.msg('这个用户名已经被占用啦！', {icon: 2});
-            }
-            else if (registerResult == 'emailExist') {
-                layer.close(loading);
-                layer.msg('这个邮箱已经注册啦！', {icon: 2});
-            }
-            else if (registerResult == 'fail') {
-                layer.close(loading);
-                layer.msg('服务器异常', {icon: 2});
+                layer.msg('用户不存在', {icon: 2});
             }
         }
     });
 
     $(function () {
         // 在键盘按下并释放及提交后验证提交表单
-        $("#signupForm").validate({
+        $("#updateForm").validate({
 
             errorPlacement: function(error, element) {
                 if (element.is(":radio"))
@@ -184,10 +175,6 @@
                     required: true,
                     minlength: 2,
                     maxlength: 10
-                },
-                nickName: {
-                    required: true,
-                    minlength: 2
                 },
                 password: {
                     required: true,
@@ -207,24 +194,13 @@
                 phoneNumber: {
                     required: true,
                     rangelength: [11, 11]
-                },
-                birthday: "required",
-
-                postNumber: "required",
-
-                address: "required"
-
+                }
             },
             messages: {
                 userName: {
                     required: "(请输入用户名)",
                     minlength: "(用户名最少由两个字母组成)",
                     maxlenth: "(用户名不得超过10个字符)"
-                },
-                nickName: {
-                    required: "(请输入昵称)",
-                    minlength: "(昵称不得少于两个字符)",
-                    maxlenth: "(昵称不得超过10个字符)"
                 },
                 password: {
                     required: "(请输入密码)",
@@ -241,16 +217,51 @@
                     required: "(请输入手机号码)",
                     rangelength: "(手机号码格式错误)"
                 },
-                email: "(请输入一个正确的邮箱)",
-
-                birthday: "(请选择出生日期)",
-
-                postNumber: "(请输入邮政编码)",
-
-                address: "(请输入售货地址)"
+                email: "(请输入一个正确的邮箱)"
             }
         });
     });
+
+    // 根据id获取指定用户对象
+    function getUserById(id) {
+        var user = {};
+        user.id = id;
+        var tempUser ;
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/user?getUserById',
+            data : user,
+            dataType : 'json',
+            success : function(result) {
+                tempUser = result.result;
+            },
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+        return tempUser;
+    }
+
+    function getUserDetailById(id) {
+        var userDetailResult = "";
+        var user = {};
+        user.id = id;
+        $.ajax({
+            async : false, //设置同步
+            type : 'POST',
+            url : '${contextPath}/user?getUserDetailById',
+            data : user,
+            dataType : 'json',
+            success : function(result) {
+                userDetailResult = result.result;
+            },
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+        return userDetailResult;
+    }
 </script>
 <style>
     .error{

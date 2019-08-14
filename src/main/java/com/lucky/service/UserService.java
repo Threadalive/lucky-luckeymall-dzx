@@ -77,7 +77,7 @@ public interface UserService {
      * @param vUserDetail 详细用户参数
      * @return  更新结果
      */
-    Map<String,Object> updateUser(User vUser, UserDetail vUserDetail);
+    Map<String,Object> updateUser(User vUser, UserDetail vUserDetail,String oldUserName);
 
     /**
      * 根据用户输入的用户名或邮箱，查询数据库，若有匹配，则校验密码，通过则

@@ -2,7 +2,10 @@ package com.lucky.service;
 
 import com.lucky.entity.Product;
 import com.lucky.util.Response;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -80,4 +83,14 @@ public interface ProductService {
      * @return 搜索结果
      */
     Map<String, Object> getProductById(int id);
+
+    /**
+     * 执行商品图片上传操作
+     *
+     * @param productImgUpload 上传商品图片
+     * @param productName 商品名
+     * @param request 请求
+     * @return 上传结果
+     */
+    Map<String, Object> uploadFile(@RequestParam MultipartFile productImgUpload, String productName, HttpServletRequest request);
 }
