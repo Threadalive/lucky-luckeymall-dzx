@@ -63,7 +63,6 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
         try {
             //清一下session中存在的对象防止重复主键异常
             sessionFactory.getCurrentSession().clear();
-
             hibernateTemplate.update(shoppingCar);
             return true;
         } catch (Exception e) {

@@ -36,7 +36,7 @@
                 </tr>
                 <tr>
                     <th>商品价格</th>
-                    <td>${productDetail.price}</td>
+                    <td>￥${productDetail.price}</td>
                 </tr>
                 <tr>
                     <th>商品描述</th>
@@ -74,6 +74,11 @@
         <div class="col-sm-10 col-md-10 col-lg-10">
             <hr class="division"/>
             <table class="table evaluationTable" border="0" id="evaluation">
+                    <caption><h3>商品评价</h3></caption>
+                <tr>
+                    <th>用户昵称</th>
+                    <th>评价详情</th>
+                </tr>
             </table>
             <hr/>
             <div id="inputArea"></div>
@@ -249,12 +254,13 @@
         for(var i=0;i<evaluations.length;i++){
             var user = getUserById(evaluations[i].userId);
             html+='<tr>'+
-                '<th>'+user.nickName+'</th>'+
+                '<td>'+user.nickName+'</td>'+
                 '<td>'+evaluations[i].content+'</td>'+
                 '</tr>';
         }
         evaluationTable.html(evaluationTable.html()+html);
 
+        //若用户订单存在,添加输入框
         if(getUserProductRecord() == "true"){
             var inputArea = $("#inputArea");
             html= '<div class="col-sm-12 col-md-12 col-lg-12">'+
@@ -262,7 +268,10 @@
                 '</div>'+
                 '<div class="col-sm-12 col-md-12 col-lg-12">'+
                 '<div class="col-sm-4 col-md-4 col-lg-4"></div>'+
-                '<button class="btn btn-primary btn-lg evaluationButton col-sm-4 col-md-4 col-lg-4" onclick="addToEvaluation()">评价</button>'+
+                '<button class="btn btn-primary btn-lg evaluationButton col-sm-4 col-md-4 col-lg-4" onclick="addToEvaluation()" style="' +
+                'bottom: 0px;' +
+                'top: 10px;' +
+                '">添加评价</button>'+
                 '</div>';
             inputArea.html(inputArea.html()+html);
         }
@@ -273,18 +282,21 @@
         var product = {};
         product.userId = '${currentUser.id}';
         product.productId = '${productDetail.id}';
+        var flag = "";
         $.ajax({
+            async: false,
             type : 'POST',
             url : '${contextPath}/shoppingRecord?getUserProductRecord',
             data : product,
             dataType : 'json',
             success : function(result) {
-                return result.result;
+               flag = result.result;
             },
             error : function(result) {
-                layer.alert('查询错误');
+                layer.alert('您还没有登录哦');
             }
         });
+        return flag;
     }
 
     // 获取评价
@@ -293,35 +305,40 @@
         var product = {};
         product.productId = '${productDetail.id}';
         $.ajax({
+            async: false,
             type : 'POST',
-            url : '${contextPath}/getShoppingEvaluations',
+            url : '${contextPath}/comment?getCommentByProductId',
             data : product,
             dataType : 'json',
             success : function(result) {
-                return result.result;
+                evaluations = result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
+        return evaluations;
     }
 
     // 根据id获取指定用户对象
     function getUserById(id) {
         var user = {};
         user.id = id;
+        var tempUser ;
         $.ajax({
+            async: false,
             type : 'POST',
             url : '${contextPath}/user?getUserById',
             data : user,
             dataType : 'json',
             success : function(result) {
-                return result.result;
+                 tempUser = result.result;
             },
             error : function(result) {
                 layer.alert('查询错误');
             }
         });
+        return tempUser;
     }
 
     // 根基商品id获取具体商品对象
@@ -401,27 +418,31 @@
         return isLogined;
     }
 
+    //添加到评价数据库中
     function addToEvaluation() {
         var inputText = $("#evaluationText").val();
         var evaluation = {};
         evaluation.userId = '${currentUser.id}';
         evaluation.productId = '${productDetail.id}';
         evaluation.content = inputText;
+        var flag;
         $.ajax({
+            async: false,
             type : 'POST',
-            url : '${contextPath}/addShoppingEvaluation',
+            url : '${contextPath}/comment?addComment',
             data : evaluation,
             dataType : 'json',
             success : function(result) {
-                if(result.result = "success"){
-                    layer.msg("评价成功",{icon:1});
-                    window.location.href = "${contextPath}/product_detail";
-                }
+                flag = result.result;
             },
             error : function(result) {
-                layer.alert('查询用户错误');
+                layer.alert('查询错误');
             }
         });
+        if(flag = "success"){
+            layer.msg("评价成功",{icon:1});
+            window.location.href = "${contextPath}/product?getProductDetail";
+        }
     }
 </script>
 </html>

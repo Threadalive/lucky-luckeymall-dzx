@@ -62,8 +62,6 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productList = new ArrayList<>();
         productList = productDao.getProductsByKeyWord(searchKeyWord);
 
-        //将查询到的商品数组转成JSON形式的字符串
-//        String searchResult = JSONArray.toJSONString(productList);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("result", productList);
         return resultMap;

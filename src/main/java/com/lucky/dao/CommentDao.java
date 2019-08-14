@@ -12,7 +12,7 @@ public interface CommentDao {
      * @param createTime 创建时间
      * @return 指定评价对象
      */
-    Comment getComment(int userId,int productId,String createTime);
+    Comment getComment(int userId,int productId,long createTime);
 
     /**
      * 添加评价项
@@ -29,7 +29,7 @@ public interface CommentDao {
      * @param createTime 创建时间
      * @return boolean true:删除成功 false:删除失败
      */
-    boolean deleteComment(int userId,int productId,String createTime);
+    boolean deleteComment(int userId,int productId,long createTime);
 
     /**
      * 更新指定评价项

@@ -15,11 +15,11 @@
 <body style="background: url('${contextPath}/bgimg/login_img02.png');background-size: cover">
 <form id="loginForm" onsubmit="return false">
     <div class="container-fluid" style="padding-top: 80px;padding-bottom: 80px" >
-        <h1 class="title center">登录LuckyMall</h1>
+        <h1 class="title center" style="color: brown;font-family: fantasy;">登录LuckyMall</h1>
         <br/>
         <div class="col-sm-offset-2 col-md-offest-2">
             <!-- 表单输入 -->
-            <div  class="form-horizontal">
+            <div  class="form-horizontal" style="width: 699px;position: relative;left: 130px;">
                 <div class="form-group">
                     <label for="nameOrEmail" class="col-sm-2 col-md-2 control-label"></label>
                     <div class="col-sm-6 col-md-6">

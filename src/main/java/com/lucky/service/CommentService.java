@@ -11,7 +11,7 @@ public interface CommentService {
      * @param createTime 创建时间
      * @return 指定评价对象
      */
-    Map<String,Object> getComment(int userId, int productId, String createTime);
+    Map<String,Object> getComment(int userId, int productId, long createTime);
 
     /**
      * 添加评价项
@@ -28,7 +28,7 @@ public interface CommentService {
      * @param createTime 创建时间
      * @return 删除结果
      */
-    Map<String,Object> deleteComment(int userId,int productId,String createTime);
+    Map<String,Object> deleteComment(int userId,int productId,long createTime);
 
     /**
      * 更新指定评价项

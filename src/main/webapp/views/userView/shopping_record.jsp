@@ -38,19 +38,19 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="unHandle">
-                        <table class="table table-hover center" id="unHandleTable">
+                        <table class="table table-hover center" id="unHandleTable" style="margin-top: 10px;">
                         </table>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="transport">
-                        <table class="table table-hover center" id="transportTable">
+                        <table class="table table-hover center" id="transportTable" style="margin-top: 10px;">
                         </table>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="receive">
-                        <table class="table table-hover center" id="receiveTable">
+                        <table class="table table-hover center" id="receiveTable" style="margin-top: 10px;">
                         </table>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="all">
-                        <table class="table table-hover center" id="allTable">
+                        <table class="table table-hover center" id="allTable" style="margin-top: 10px;">
                         </table>
                     </div>
                 </div>
@@ -176,7 +176,8 @@
                     '<td>'+phoneNumber+'</td>'+
                     '<td>'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
                     '<td>'+
-                    '<button class="btn btn-primary btn-sm" onclick="receiveProducts('+allShoppingRecords[i].userId+','+allShoppingRecords[i].productId+',\''+allShoppingRecords[i].createTime+'\')">确认收货</button>'+
+                    '<button class="btn btn-primary btn-sm" onclick="receiveProducts('+allShoppingRecords[i].userId+','+allShoppingRecords[i].productId+',\''+allShoppingRecords[i].createTime+'\')" style="    position: relative;\n' +
+                    '    top: -2px;">确认收货</button>'+
                     '</td>'+
                     '</tr>';
                 transportCounts++;
@@ -410,7 +411,7 @@
             dataType : 'json',
             success : function(result) {
                 if(result.result == "success"){
-                    layer.msg('即将进入详情页面~',{icon:1},function(){
+                    layer.msg('即将进入详情页面~',{icon:1,time:2000},function(){
                         window.location.href = "${contextPath}/product?getProductDetail";
                     });
                 }

@@ -15,6 +15,7 @@ public class Comment {
     private int userId;
     private int productId;
     private long createTime;
+    private String content;
 
     @Id
     @Column(name = "user_id")
@@ -37,12 +38,21 @@ public class Comment {
     }
 
     @Id
-    @Column(name = "create_id")
+    @Column(name = "create_time")
     public long getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    @Column(name = "content")
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

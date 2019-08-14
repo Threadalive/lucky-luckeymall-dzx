@@ -25,21 +25,21 @@
         <!-- 控制栏 -->
         <div class="col-sm-3 col-md-2 sidebar sidebar-1">
             <ul class="nav nav-sidebar">
-                <li class="list-group-item-diy"><a href="#productArea1">套装 <span class="sr-only">(current)</span></a>
+                <li class="list-group-item-diy"><a href="#productArea1">潮流女装<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="list-group-item-diy"><a href="#productArea2">外套</a></li>
-                <li class="list-group-item-diy"><a href="#productArea3">裤子</a></li>
-                <li class="list-group-item-diy"><a href="#productArea4">裙装</a></li>
-                <li class="list-group-item-diy"><a href="#productArea5">帽子</a></li>
-                <li class="list-group-item-diy"><a href="#productArea6">鞋子</a></li>
-                <li class="list-group-item-diy"><a href="#productArea7">腰带</a></li>
+                <li class="list-group-item-diy"><a href="#productArea2">时尚男装</a></li>
+                <li class="list-group-item-diy"><a href="#productArea3">羽绒服</a></li>
+                <li class="list-group-item-diy"><a href="#productArea4">衬衫/T恤</a></li>
+                <li class="list-group-item-diy"><a href="#productArea5">外套上衣</a></li>
+                <li class="list-group-item-diy"><a href="#productArea6">针织毛衫</a></li>
+                <li class="list-group-item-diy"><a href="#productArea7">秋外套</a></li>
             </ul>
         </div>
         <!-- 控制内容 -->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="jumbotron">
-                <h1>欢迎来到LuckyMall</h1>
-                <p>LuckyMall——致力于装扮不一样的你</p>
+                <h1 style="font-family: fantasy;color: indigo;">欢迎来到LuckyMall</h1>
+                <p style="font-family: -webkit-pictograph;color: maroon;">LuckyMall——致力于装扮不一样的你</p>
             </div>
 
             <div name="productArea1" class="row pd-10" id="productArea1">
@@ -77,13 +77,13 @@
     var loading = layer.load(0);
 
     var productType = new Array;
-    productType[1] = "套装";
-    productType[2] = "外套";
-    productType[3] = "裤子";
-    productType[4] = "裙装";
-    productType[5] = "帽子";
-    productType[6] = "鞋子";
-    productType[7] = "腰带";
+    productType[1] = "潮流女装";
+    productType[2] = "时尚男装";
+    productType[3] = "羽绒服";
+    productType[4] = "衬衫/T恤";
+    productType[5] = "外套上衣";
+    productType[6] = "针织毛衫";
+    productType[7] = "秋外套";
 
     listProduct();
 
@@ -107,7 +107,7 @@
             html += '<div class="col-sm-4 col-md-4" >'+
                 '<div class="boxes pointer" onclick="productDetail('+allProduct[i].id+')">'+
                 '<div class="big bigimg">'+
-                '<img src="'+imgURL+'">'+
+                '<img src="'+imgURL+'" width="350">'+
                 '</div>'+
                 '<p class="product-name">'+allProduct[i].productName+'</p>'+
                 '<p class="product-price">¥'+allProduct[i].price+'</p>'+

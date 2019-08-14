@@ -13,6 +13,7 @@
     <title>注册</title>
 </head>
 <body background="${contextPath}/bgimg/login_img01.jpg">
+<jsp:include page="../includeView/head.jsp" />
 <form id="signupForm" onsubmit="return false">
 <div class="container-fluid">
     <h1 class="title center">注册</h1>
@@ -96,14 +97,9 @@
     </div>
 </div>
 </form>
+<jsp:include page="../includeView/foot.jsp" />
 </body>
 
-<link href="${contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link href="${contextPath}/css/style.css" rel="stylesheet">
-<link href="${contextPath}/js/theme/default/layer.css" rel="stylesheet">
-
-<script src="${contextPath}/js/jquery-3.4.1.js"></script>
-<script src="${contextPath}/js/layer.js"></script>
 <script src="${contextPath}/js/jquery.validate.min.js"></script>
 <script src="${contextPath}/js/messages_zh.js"></script>
 
