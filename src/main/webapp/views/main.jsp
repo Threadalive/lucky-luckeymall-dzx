@@ -37,11 +37,11 @@
         </div>
         <!-- 控制内容 -->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div class="jumbotron">
-                <h1 style="font-family: fantasy;color: indigo;">欢迎来到LuckyMall</h1>
-                <p style="font-family: -webkit-pictograph;color: maroon;">LuckyMall——致力于装扮不一样的你</p>
-            </div>
-
+            <div class="jumbotron" style="background: url('${contextPath}/bgimg/main.jpg');background-position-x: center;height: 300px;">
+                <h1 style="font-family: fantasy;color: black;position: relative;top: 90px;">LuckyMall</h1>
+                <p style="font-family: fantasy;color: lightblue;position: relative;top: 105px;left: 19px;">LuckyMall——致力于装扮不一样的你</p>
+            </div >
+            <div style="position: relative;bottom: 45px;">
             <div name="productArea1" class="row pd-10" id="productArea1">
             </div>
 
@@ -62,7 +62,7 @@
 
             <div name="productArea7" class="row" id="productArea7">
             </div>
-
+            </div>
 
         </div>
         <%--页底部分--%>

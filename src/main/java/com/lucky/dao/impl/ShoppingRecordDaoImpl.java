@@ -41,16 +41,21 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
     @Override
     public boolean deleteShoppingRecord(int userId, int productId) {
-        String hql = "from ShoppingRecord where userId=? and productId=?";
+//        String hql = "from ShoppingRecord where userId=? and productId=?";
+//        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+//        query.setParameter(0,userId);
+//        query.setParameter(1,productId);
+//        try {
+//            hibernateTemplate.deleteAll(query.list());
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+        String hql = "delete ShoppingRecord where userId=? and productId=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,userId);
-        query.setParameter(1,productId);
-        try {
-            hibernateTemplate.deleteAll(query.list());
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        query.setParameter(0, userId);
+        query.setParameter(1, productId);
+        return query.executeUpdate() > 0;
     }
 
     @Override
@@ -62,7 +67,6 @@ public class ShoppingRecordDaoImpl implements ShoppingRecordDao {
 
         Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
         return query.executeUpdate()>0;
-
 //1、
 //        无法映射到具体表
 //        String hql = "update ShoppingReocrd set orderStatus=? where userId=? and productId=? and createTime=?";

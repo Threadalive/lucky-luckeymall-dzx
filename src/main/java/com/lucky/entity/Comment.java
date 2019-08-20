@@ -12,9 +12,21 @@ import javax.persistence.*;
 @Table(name = "t_comment")
 @IdClass(value = ShoppingRecordPK.class)
 public class Comment {
+    /**
+     * 用户id
+     */
     private int userId;
+    /**
+     * 商品id
+     */
     private int productId;
+    /**
+     * 创建时间
+     */
     private long createTime;
+    /**
+     * 评价内容
+     */
     private String content;
 
     @Id

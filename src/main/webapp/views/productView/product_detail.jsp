@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -26,33 +27,34 @@
     <div class="row">
         <div class="col-sm-1 col-md-1"></div>
         <div class="col-sm-5 col-md-5">
-            <img class="detail-img" src="${contextPath}/img/${productDetail.id}.jpg">
+            <img class="detail-img" style="width: 500px;height: 550px" src="${contextPath}/img/${productDetail.id}.jpg">
         </div>
         <div class="col-sm-5 col-md-5 detail-x">
-            <table class="table table-striped">
-                <tr>
-                    <th>商品名称</th>
-                    <td>${productDetail.productName}</td>
+            <table class="table table-striped" width='100%' border='0' cellspacing='0' cellpadding='0' class='mytable' style='table-layout: fixed'>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">商品名称</th>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.productName}</td>
                 </tr>
-                <tr>
-                    <th>商品价格</th>
-                    <td>￥${productDetail.price}</td>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">商品价格</th>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>￥<fmt:formatNumber type="number" value="${productDetail.price}" maxFractionDigits="2" />
+                    </td>
                 </tr>
-                <tr>
-                    <th>商品描述</th>
-                    <td>${productDetail.description}</td>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">商品描述</th>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.description}</td>
                 </tr>
-                <tr>
-                    <th>商品类别</th>
-                    <td>${productDetail.type}</td>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">商品类别</th>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.type}</td>
                 </tr>
-                <tr>
-                    <th>商品库存</th>
-                    <td>${productDetail.counts}</td>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">商品库存</th>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.counts}</td>
                 </tr>
-                <tr>
-                    <th>购买数量</th>
-                    <td>
+                <tr style="height: 85px">
+                    <th style="font-family: cursive;font-size: large;">购买数量</th>
+                    <td style="position: relative;left: 125px;">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default" onclick="subCounts()">-</button>
                             <button id="productCounts" type="button" class="btn btn-default">1</button>
@@ -63,9 +65,9 @@
             </table>
             <div class="row">
                 <div class="col-sm-1 col-md-1 col-lg-1"></div>
-                <button class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingCar('${productDetail.id}')">添加购物车</button>
+                <button class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" style="position: relative;left: 30px;background-color: gray;border-color: gray;" onclick="addToShoppingCar('${productDetail.id}')">添加购物车</button>
                 <div class="col-sm-2 col-md-2 col-lg-2"></div>
-                <button  class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" onclick="buyConfirm('${productDetail.id}')">立即购买</button>
+                <button  class="btn btn-danger btn-lg col-sm-4 col-md-4 col-lg-4" style="position: relative;left: 25px" onclick="buyConfirm('${productDetail.id}')">立即购买</button>
             </div>
         </div>
     </div>
@@ -78,6 +80,7 @@
                 <tr>
                     <th>用户昵称</th>
                     <th>评价详情</th>
+                    <th>评价时间</th>
                 </tr>
             </table>
             <hr/>
@@ -85,7 +88,6 @@
         </div>
     </div>
 </div>
-
 <!-- 尾部 -->
 <jsp:include page="../includeView/foot.jsp"/>
 
@@ -93,6 +95,7 @@
 </body>
 
 <script type="text/javascript">
+
 
     listEvaluations();
 
@@ -191,7 +194,7 @@
             '</table>'+
             '<div class="row">'+
             '<div class="col-sm-4 col-md-4 col-lg-4"></div>'+
-            '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecords('+productId+')">确认购买</button>'+
+            '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecords('+productId+')">确认支付</button>'+
             '</div>'+
             '</div>';
         layer.open({
@@ -201,6 +204,45 @@
             area:['650px','350px']
         });
         }
+        }
+    }
+
+    function addScore(productId) {
+        if(judgeIsLogin()){
+        var productCounts = $("#productCounts");
+        var counts = parseInt(productCounts.html());
+        var product = getProductById(productId);
+        var income = parseInt(counts*product.price*0.05);
+
+        var userScore = {};
+        userScore.income = income;
+        userScore.userId = '${currentUser.id}';
+        userScore.productName = product.productName;
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/score?addScore',
+            data : userScore,
+            dataType : 'json',
+            success : function(result) {
+                if(result.result == "success") {
+                    layer.msg('支付成功！用户积分+'+income+'!', {icon: 1, title:'支付详情'},
+                        function () {
+                            window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+                        },
+                        function(index){
+                            layer.close(index);
+                    }
+                    );
+                }
+                else if(result.result == "fail"){
+                    layer.msg("积分增加出错咯");
+                }
+            },
+            error : function(result) {
+                layer.alert('出错咯~再试试吧');
+            }
+        });
         }
     }
 
@@ -221,16 +263,14 @@
             dataType : 'json',
             success : function(result) {
                 if(result.result == "success") {
-                    layer.confirm('购买成功!前往订单详情？', {icon: 1, title:'购买成功',btn:['前往订单','继续购买']},
-                        function(){
-                            window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
-                        },
+                    // layer.msg('支付成功!', {icon: 1, title:'支付详情'},
+                        addScore(productId),
                         function(index){
                             layer.close(index);}
-                    );
+                    // );
                 }
                 else if(buyResult == "unEnough"){
-                    layer.alert("库存不足，亲下回再买哦~")
+                    layer.alert("库存不足，亲下回再买哦~");
                 }
             },
             error : function(result) {
@@ -248,8 +288,9 @@
         for(var i=0;i<evaluations.length;i++){
             var user = getUserById(evaluations[i].userId);
             html+='<tr>'+
-                '<td>'+user.nickName+'</td>'+
-                '<td>'+evaluations[i].content+'</td>'+
+                '<td style="position: relative;left: 100px;">'+user.nickName+'</td>'+
+                '<td style="position: relative;left: 105px;">'+evaluations[i].content+'</td>'+
+                '<td style="position: relative;left: 190px;">'+dateFormat(evaluations[i].createTime)+'</td>'+
                 '</tr>';
         }
         evaluationTable.html(evaluationTable.html()+html);
@@ -287,7 +328,7 @@
                flag = result.result;
             },
             error : function(result) {
-                layer.alert('您还没有登录哦');
+                layer.msg('您还没有登录哦',{icon:1,time:1500});
             }
         });
         return flag;
@@ -314,6 +355,17 @@
         return evaluations;
     }
 
+    function dateFormat(time) {
+        var date = new Date(time);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        // 拼接
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+    }
     // 根据id获取指定用户对象
     function getUserById(id) {
         var user = {};

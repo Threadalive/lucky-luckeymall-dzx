@@ -34,10 +34,6 @@ public class User {
      * 用户角色
      */
     private int role;
-    /**
-     * 用户积分
-     */
-    private int score;
 
     //定义主键自增
     @Id
@@ -88,9 +84,4 @@ public class User {
     public void setRole(int role) {
         this.role = role;
     }
-
-    @Column(name = "score")
-    public int getScore() { return score; }
-
-    public void setScore(int score) { this.score = score; }
 }

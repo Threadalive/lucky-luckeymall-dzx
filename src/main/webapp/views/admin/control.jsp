@@ -26,12 +26,21 @@
                 <li class="list-group-item-diy"><a href="#section1">查看所有用户<span class="sr-only">(current)</span></a></li>
                 <li class="list-group-item-diy"><a href="#section2">查看所有商品</a></li>
                 <li class="list-group-item-diy"><a href="#section3">添加商品</a></li>
+                <li style="position: relative;left: 55px"><a href="${contextPath}/shoppingRecord?shoppingRecordHandle">处理订单</a></li>
             </ul>
         </div>
         <!-- 控制内容 -->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="col-md-12">
-                <h1><a name="section1">用户信息</a></h1>
+                <hr />
+                <a style="color: dimgrey;font-family: cursive;position: relative;right: 290px;font-size: 33px;" name="section1">用户信息</a>
+                <div class="navbar-form navbar-left" style="position: relative;left: 170px">
+                    <div class="form-group" style="width: 100px">
+                        <input type="text" class="form-control" placeholder="输入用户名或邮箱" id="searchKeyWord2"/>
+                    </div>
+                    <button class="btn btn-default" style="position: relative;left: 80px" onclick="searchUser();">查询用户</button>
+                    <a class="btn btn-default" style="position: relative;left: 80px" href="${contextPath}/user?addUser">添加用户</a>
+                </div>
                 <hr/>
                 <table class="table table-hover center" id="userTable">
                 </table>
@@ -39,15 +48,34 @@
 
             <div class="col-md-12">
                 <hr/>
-                <h1><a name="section2">商品信息</a></h1>
-                <hr/>
+                <a style="color: dimgrey;font-family: cursive;position: relative;right: 500px;font-size: 33px;" name="section2">商品信息</a>
+                <div class="navbar-form navbar-left" style="position: relative;left: 170px">
+                    <div class="form-group" style="width: 100px">
+                        <input type="text" class="form-control" placeholder="输入商品名" id="searchKeyWord3"/>
+                    </div>
+                    <button class="btn btn-default" style="position: relative;left: 80px" onclick="adminSearchProduct();">查询商品</button>
+                </div>
+                <%--<div class="form-group">--%>
+                    <div class="col-sm-6 col-md-6" style="width: 300px;position: relative;left: 300px;top: 9px">
+                        <select name="productType" class="form-control" id="productType2">
+                            <option value="1">潮流女装</option>
+                            <option value="2">时尚男装</option>
+                            <option value="3">羽绒服</option>
+                            <option value="4">衬衫/T恤</option>
+                            <option value="5">外套上衣</option>
+                            <option value="6">针织毛衫</option>
+                            <option value="7">秋外套</option>
+                        </select>
+                        <button class="btn btn-default" style="position: relative;left: 290px;bottom: 35px;" onclick="adminSearchProductByType();">查询商品</button>
+                    </div>
+                <%--</div>--%>
                 <div class="col-lg-12 col-md-12 col-sm-12" id="productArea"></div>
                 <br/>
             </div>
 
             <div class="col-md-12">
                 <hr/>
-                <h1><a name="section3">添加商品</a></h1>
+                <h1 ><a style="color: dimgrey;font-family: cursive;" name="section3">添加商品</a></h1>
                 <hr/>
                 <div class="col-sm-offset-2 col-md-offest-2">
                     <!-- 表单输入 -->
@@ -122,9 +150,9 @@
 </div>
 <jsp:include page="../includeView/foot.jsp" />
 </body>
-
 <script type="text/javascript" charset="UTF-8">
 
+    if(judgeIsLogin()){
     var loading = layer.load(2);
     listAllUser();
     listAllProduct();
@@ -138,6 +166,7 @@
             '<th> 用户名</th>'+
             '<th> 昵称</th>'+
             '<th> 邮箱</th>'+
+            '<th> 修改信息</th>'+
             '<th> 是否删除</th>'+
             '</tr>');
         var html = "";
@@ -148,7 +177,10 @@
                 '<td>'+allUser[i].nickName+'</td>'+
                 '<td>'+allUser[i].email+'</td>'+
                 '<td>'+
-                '<button class="btn btn-primary btn-sm" type="submit" onclick="deleteUser('+allUser[i].id+')">删除</button>'+
+                '<button class="btn btn-primary btn-sm" type="submit" style="background-color: darkred;border-color: white;" onclick="updateUser('+allUser[i].id+')">编辑</button>'+
+                '</td>'+
+                '<td>'+
+                '<button class="btn btn-primary btn-sm" type="submit" style="background-color: darkred;border-color: white;" onclick="deleteUser('+allUser[i].id+')">删除</button>'+
                 '</td>'+
                 '</tr>';
         }
@@ -186,13 +218,13 @@
             html+='<div class="col-sm-4 col-md-4 pd-5">'+
                 '<div class="boxes">'+
                 '<div class="big bigimg">'+
-                '<img src="'+imgURL+'" width="300">'+
+                '<img src="'+imgURL+'" width="300" onclick="alterProduct('+allProduct[i].id+')">'+
                 '</div>'+
                 '<p class="font-styles center">'+allProduct[i].productName+'</p>'+
-                '<p class="pull-right">价格：'+allProduct[i].price+'</p>'+
-                '<p class="pull-left">库存：'+allProduct[i].counts+'</p>'+
+                '<p style="position: relative;right: 14px;" class="pull-right">价格：'+allProduct[i].price+'</p>'+
+                '<p style="position: relative;left: 14px;" class="pull-left">库存：'+allProduct[i].counts+'</p>'+
                 '<div class = "row">'+
-                '<button class="btn btn-primary delete-button" type="submit" onclick="deleteProduct('+allProduct[i].id+')">删除商品</button>'+
+                '<button class="btn btn-primary delete-button" style="background-color: darkred;border-color: white;position:relative;left:5px;width: 69px;height: 30px;padding-top: 5px;font-size: 2px;" type="submit" onclick="deleteProduct('+allProduct[i].id+')">删除商品</button>'+
                 '</div>'+
                 '</div>'+
                 '</div>';
@@ -200,6 +232,27 @@
         productArea.html(productArea.html()+html);
     }
 
+    function alterProduct(id) {
+        var alterId={};
+        alterId.id = id;
+        var tempProduct = "";
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/product?setId',
+            data : alterId,
+            dataType : 'json',
+            success : function(result) {
+                tempProduct = result.result;
+            },
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+        if(tempProduct == "success"){
+            window.location.href="${contextPath}/product?alterProductMsg";
+        }
+    }
     //查询所有商品
     function getAllProducts() {
         var allProducts = null;
@@ -237,7 +290,7 @@
                 layer.alert('删除用户错误');
             }
         });
-        layer.msg(deleteResult.message,{icon:1},function () {
+        layer.msg(deleteResult.message,{icon:1,time:2000},function () {
             listAllUser();
         });
     }
@@ -258,75 +311,217 @@
                 layer.alert('删除商品错误');
             }
         });
-        layer.msg(deleteResult.message,{icon:1},function () {
+        layer.msg(deleteResult.message,{icon:1,time:1000},function () {
             listAllProduct();
         });
     }
 
     function addProduct() {
         var loadings = layer.load(0);
-        var product = {};
-        product.productName = $("#productName").val();
-        product.description = $("#productDescribe").val();
-        product.keyWord = $("#keyWord").val();
-        product.price = $("#productPrice").val();
-        product.counts = $("#productCount").val();
-        product.type = $("#productType").val();
-        var addResult="";
+        var product = new FormData();
+        product.append('productName',$("#productName").val());
+        product.append('description',$("#productDescribe").val());
+        product.append('keyWord',$("#keyWord").val());
+        product.append('price',$("#productPrice").val());
+        product.append('counts',$("#productCount").val());
+        product.append('type',$("#productType").val());
+        product.append('file',$("#productImgUpload")[0].files[0]);
         $.ajax({
-            async : false,
             type : 'POST',
             url : '${contextPath}/product?addProduct',
             data : product,
             dataType : 'json',
+            contentType: false, //不设置内容类型
+            processData: false, //不处理数据
             success : function(result) {
-                addResult = result.result;
+                layer.msg('添加商品成功', {icon: 1, time: 1000});
+                layer.close(loadings);
+                listAllProduct();
             },
             error : function(result) {
-                layer.alert('删除商品错误');
+                layer.alert('添加商品失败');
             }
         });
-        if(addResult == "success") {
-            //商品图片上传
-            fileUpload();
-            layer.msg('添加商品成功', {icon: 1, time: 1000});
-            layer.close(loadings)
+    }
+    }
+    // 使用jstl根据session中的currentUser属性判断用户是否已登录，否则跳转至登陆界面
+    function judgeIsLogin() {
+        var isLogined=false;
+        <c:if test="${not empty currentUser and not empty currentUser.id}">
+        isLogined=true;
+        </c:if>
+        if(!isLogined){
+            window.location.href="${contextPath}/login";
         }
-        listAllProduct();
+        return isLogined;
+    }
+    function updateUser(id) {
+        var alterId={};
+        alterId.userId = id;
+        var tempUser = "";
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/user?setId',
+            data : alterId,
+            dataType : 'json',
+            success : function(result) {
+                tempUser = result.result;
+            },
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+        if(tempUser == "success"){
+            window.location.href="${contextPath}/user?alterUserMsg";
+        }
     }
 
-    function fileUpload() {
-        var results = "";
-        var productName = $("#productName").val();
-        $.ajaxFileUpload({
-            secureuri:false,
-            url:'${contextPath}/product?uploadFile?productName='+productName,
-            fileElementId:'productImgUpload',
-            type:'POST',
+    function searchUser() {
+        var userTable = $("#userTable");
+        var user =getUserByName();
+        userTable.html('<tr>'+
+            '<th> 用户ID </th>'+
+            '<th> 用户名</th>'+
+            '<th> 昵称</th>'+
+            '<th> 邮箱</th>'+
+            '<th> 修改信息</th>'+
+            '<th> 是否删除</th>'+
+            '</tr>');
+        var html="";
+        html += '<tr>'+
+            '<td>'+user.id+'</td>'+
+            '<td>'+user.userName+'</td>'+
+            '<td>'+user.nickName+'</td>'+
+            '<td>'+user.email+'</td>'+
+            '<td>'+
+            '<button class="btn btn-primary btn-sm" type="submit" style="background-color: darkred;border-color: white;" onclick="updateUser('+user.id+')">编辑</button>'+
+            '</td>'+
+            '<td>'+
+            '<button class="btn btn-primary btn-sm" type="submit" style="background-color: darkred;border-color: white;" onclick="deleteUser('+user.id+')">删除</button>'+
+            '</td>'+
+            '</tr>';
+
+        userTable.html(userTable.html()+html);
+    }
+
+    // 根据id获取指定用户对象
+    function getUserByName() {
+        var user = {};
+        user.userName = $("#searchKeyWord2").val();
+        var tempUser ;
+        $.ajax({
+            async: false,
+            type : 'POST',
+            url : '${contextPath}/user?getUserByName',
+            data : user,
             dataType : 'json',
-            success: function (result){
-                // result = result.replace(/<pre.*?>/g, '');  //ajaxFileUpload会对服务器响应回来的text内容加上<pre style="....">text</pre>前后缀
-                // result = result.replace(/<PRE.*?>/g, '');
-                // result = result.replace("<PRE>", '');
-                // result = result.replace("</PRE>", '');
-                // result = result.replace("<pre>", '');
-                // result = result.replace("</pre>", '');
-                // result = JSON.parse(result);
-                results = result.result;
-                if(results == "success") {
-                    layer.msg("图片上传成功", {icon: 1},function () {
-                        window.location.href = "${contextPath}/admin/control";
-                    });
-                }
-                else {
-                    layer.msg("图片上传失败", {icon: 0});
-                }
+            success : function(result) {
+                tempUser = result.result;
             },
-            error: function ()
-            {
-                layer.alert("上传错误");
-            }}
-        );
+            error : function(result) {
+                layer.alert('查询错误');
+            }
+        });
+        return tempUser;
+    }
+
+    function adminSearchProduct() {
+        var productArea = $("#productArea");
+
+        var allProduct = getProductsByKeyWord();
+
+        var html="";
+
+        productArea.html('');
+
+        for(var i=0;i<allProduct.length;i++){
+            var imgURL = "${contextPath}/img/"+allProduct[i].id+".jpg";
+            html+='<div class="col-sm-4 col-md-4 pd-5">'+
+                '<div class="boxes">'+
+                '<div class="big bigimg">'+
+                '<img src="'+imgURL+'" width="300" onclick="alterProduct('+allProduct[i].id+')">'+
+                '</div>'+
+                '<p class="font-styles center">'+allProduct[i].productName+'</p>'+
+                '<p style="position: relative;right: 14px;" class="pull-right">价格：'+allProduct[i].price+'</p>'+
+                '<p style="position: relative;left: 14px;" class="pull-left">库存：'+allProduct[i].counts+'</p>'+
+                '<div class = "row">'+
+                '<button class="btn btn-primary delete-button" style="background-color: darkred;border-color: white;position:relative;left:5px;width: 69px;height: 30px;padding-top: 5px;font-size: 2px;" type="submit" onclick="deleteProduct('+allProduct[i].id+')">删除商品</button>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+        }
+        productArea.html(productArea.html()+html);
+    }
+
+    function adminSearchProductByType() {
+        var productArea = $("#productArea");
+
+        var allProduct = getProductsByType();
+
+        var html="";
+
+        productArea.html('');
+
+        for(var i=0;i<allProduct.length;i++){
+            var imgURL = "${contextPath}/img/"+allProduct[i].id+".jpg";
+            html+='<div class="col-sm-4 col-md-4 pd-5">'+
+                '<div class="boxes">'+
+                '<div class="big bigimg">'+
+                '<img src="'+imgURL+'" width="300" onclick="alterProduct('+allProduct[i].id+')">'+
+                '</div>'+
+                '<p class="font-styles center">'+allProduct[i].productName+'</p>'+
+                '<p style="position: relative;right: 14px;" class="pull-right">价格：'+allProduct[i].price+'</p>'+
+                '<p style="position: relative;left: 14px;" class="pull-left">库存：'+allProduct[i].counts+'</p>'+
+                '<div class = "row">'+
+                '<button class="btn btn-primary delete-button" style="background-color: darkred;border-color: white;position:relative;left:5px;width: 69px;height: 30px;padding-top: 5px;font-size: 2px;" type="submit" onclick="deleteProduct('+allProduct[i].id+')">删除商品</button>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+        }
+        productArea.html(productArea.html()+html);
+    }
+
+    //根据类型查询商品
+    function getProductsByType() {
+        var products = null;
+        var nothing = {};
+        nothing.type = $("#productType2").val();
+        $.ajax({
+            async:false,
+            type : 'POST',
+            url : '${contextPath}/product?searchProductByType',
+            data : nothing,
+            dataType : 'json',
+            success : function(result) {
+                products = result.result;
+            },
+            error : function(resoult) {
+                layer.alert('查询商品出错咯~');
+            }
+        });
+        return products;
+    }
+
+    //查询所有商品
+    function getProductsByKeyWord() {
+        var products = null;
+        var nothing = {};
+        nothing.searchKeyWord = $("#searchKeyWord3").val();
+        $.ajax({
+            async:false,
+            type : 'POST',
+            url : '${contextPath}/product?searchProductByKeyWord',
+            data : nothing,
+            dataType : 'json',
+            success : function(result) {
+                products = result.result;
+            },
+            error : function(resoult) {
+                layer.alert('查询商品出错咯~');
+            }
+        });
+        return products;
     }
 </script>
 </html>

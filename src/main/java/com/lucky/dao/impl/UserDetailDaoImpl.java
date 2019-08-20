@@ -1,7 +1,9 @@
 package com.lucky.dao.impl;
 
 import com.lucky.dao.UserDetailDao;
+import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -68,6 +70,20 @@ public class UserDetailDaoImpl implements UserDetailDao {
     }
 
     @Override
+    public boolean updateUserScore(int userId,int score) {
+        try {
+            UserDetail user = hibernateTemplate.get(UserDetail.class,userId);
+            user.setScore(score);
+            hibernateTemplate.update(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
     public List<UserDetail> getAllUserDetail() {
         List<UserDetail> userDetailsList = null;
         //Spring4于Hibernate5之间存在冲突，类型无法转换，这里用Hibernate4
@@ -77,5 +93,14 @@ public class UserDetailDaoImpl implements UserDetailDao {
             e.printStackTrace();
         }
         return userDetailsList;
+    }
+
+    @Override
+    public int getUserScore(int userId) {
+        String hql = "from UserDetail where id=?";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter(0, userId);
+        UserDetail userDetail = (UserDetail) query.uniqueResult();
+        return userDetail.getScore();
     }
 }

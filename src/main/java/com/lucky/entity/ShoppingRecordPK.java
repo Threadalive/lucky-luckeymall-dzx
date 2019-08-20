@@ -41,7 +41,6 @@ public class ShoppingRecordPK implements Serializable {
     public int hashCode() {
         int result = getUserId();
         result = 31 * result + getProductId();
-//        result = 31 * result + getCreateTime();
         return result;    }
 
     @Override

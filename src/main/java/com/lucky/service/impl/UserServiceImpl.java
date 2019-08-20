@@ -84,8 +84,8 @@ public class UserServiceImpl implements UserService {
         //判断此用户是否存在购买记录、评价记录、购物车记录，如果存在，则应该先删除对应的记录，否则后续删除会出错
         try {
             commentDao.deleteCommentByUserId(id);
-            shoppingCarDao.deleteShoppingCarByUserId(id);
             shoppingRecordDao.deleteShoppingRecordByUser(id);
+            shoppingCarDao.deleteShoppingCarByUserId(id);
             userDetailService.deleteUserDetail(id);
             userDao.deleteUser(id);
             //删除后设置对应状态
@@ -140,7 +140,6 @@ public class UserServiceImpl implements UserService {
                 result = "emailExist";
             }else {
                 //设置t_user_mian表的值
-                vUser.setScore(0);
                 vUser.setRole(0);
                 addUser(vUser);
                 user = userDao.getUser(vUser.getId());
@@ -195,6 +194,9 @@ public class UserServiceImpl implements UserService {
                 result = "success";
                 //暂存用户对象
                 httpSession.setAttribute("currentUser",user);
+                if(user.getRole()==1){
+                    result = "admin";
+                }
             }else {
                 result = "wrong";
             }

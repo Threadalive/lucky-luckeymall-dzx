@@ -2,7 +2,8 @@ package com.lucky.controller;
 
 import com.lucky.entity.ShoppingCar;
 import com.lucky.service.ShoppingCarService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class ShoppingCarController {
     /**
      * 日志对象
      */
-    private static final Logger logger = Logger.getLogger(ShoppingCarController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShoppingCar.class);
 
     /**
      * 返回给前台购物车页面
@@ -52,6 +53,7 @@ public class ShoppingCarController {
     @PostMapping(params = "addShoppingCar")
     @ResponseBody
     public Map<String,Object> addShoppingCar(ShoppingCar shoppingCar){
+        logger.info("添加的购物车对象用户id为:"+shoppingCar.getUserId());
         if (shoppingCar!=null) {
             return shoppingCarService.addShoppingCar(shoppingCar);
         }else {
@@ -69,6 +71,7 @@ public class ShoppingCarController {
     @PostMapping(params = "getShoppingCarById")
     @ResponseBody
     public Map<String,Object> getShoppingCars(int userId){
+        logger.info("通过id"+userId+"查询用户购物车信息");
         return shoppingCarService.getShoppingCars(userId);
     }
 
@@ -81,6 +84,7 @@ public class ShoppingCarController {
     @PostMapping(params = "deleteShoppingCar")
     @ResponseBody
     public Map<String,Object> deleteShoppingCar(int userId,int productId){
+        logger.info("根据用户id与商品id"+userId+" "+productId+"删除购物车信息");
         return shoppingCarService.deleteShoppingCar(userId,productId);
     }
 }

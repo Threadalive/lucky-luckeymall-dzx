@@ -4,7 +4,8 @@ import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
 import com.lucky.service.UserService;
 import com.lucky.util.Response;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,7 +28,7 @@ public class UserController {
     /**
      * 日志对象
      */
-    private static final Logger logger = Logger.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     /**
      * 用户服务类，供控制器调用
      */
@@ -58,6 +59,20 @@ public class UserController {
         view.setViewName("admin/control");
         return  view;
     }
+
+    @GetMapping(params = "home")
+    public ModelAndView home(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("admin/home");
+        return  view;
+    }
+
+    @GetMapping(params = "showUser")
+    public ModelAndView showUser(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("admin/showUser");
+        return  view;
+    }
     /**
      * 返回给前台一个个人中心页面
      *
@@ -70,6 +85,13 @@ public class UserController {
         return  view;
     }
 
+
+    @GetMapping(params = "alterUserMsg")
+    public ModelAndView alterUserMsg(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("/admin/alter_user_msg");
+        return  view;
+    }
     /**
      * 获取客户端get请求，参数为register时，返回注册界面视图。
      * 输入URL为：http://127.0.0.1:8080/user?register
@@ -79,7 +101,15 @@ public class UserController {
     @GetMapping(params = "register")
     public ModelAndView register(){
         ModelAndView view=new ModelAndView();
+
         view.setViewName("/userView/register");
+        return  view;
+    }
+
+    @GetMapping(params = "addUser")
+    public ModelAndView addUser(){
+        ModelAndView view=new ModelAndView();
+        view.setViewName("/admin/add_user");
         return  view;
     }
 
@@ -148,12 +178,32 @@ public class UserController {
     @ResponseBody
     public Map<String, Object> getUserById(int id) {
         if(id!=0) {
+            logger.info("传入用户id为:"+id);
             return userService.getUserById(id);
         }else {
             return null;
         }
     }
 
+    /**
+     * 根据用户id获取具体用户对象
+     *
+     * @param userName 用户名
+     * @return 指定id的用户对象
+     */
+    @PostMapping(params = "getUserByName")
+    @ResponseBody
+    public Map<String, Object> getUserByName(String userName) {
+        Map<String,Object> resultMap = new HashMap<>();
+        if(userName!=null) {
+            logger.info("传入用户id为:"+userName);
+            User user = userService.getUser(userName);
+            resultMap.put("result",user);
+            return resultMap;
+        }else {
+            return null;
+        }
+    }
     /**
      * delete请求控制用户信息的删除，根据URL中传入的参数id，删除对应id的用户。
      * URL如 delete: http://127.0.0.7:8080/user/2，即删除id为2的用户。
@@ -163,6 +213,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public Response doDelete(@PathVariable int id){
+        logger.info("传入用户id为:"+id);
         return userService.deleteUser(id);
     }
 
@@ -175,6 +226,7 @@ public class UserController {
     @PostMapping(params = "getUserAddressAndPhoneNumber")
     @ResponseBody
     public Map<String,Object> getUserAddressAndPhoneNumber(int userId){
+        logger.info("传入用户id为:"+userId);
         return userService.getUserAddressAndPhoneNumber(userId);
     }
 
@@ -194,6 +246,15 @@ public class UserController {
             return resultMap;
     }
 
+    @PostMapping(params = "setId")
+    @ResponseBody
+    public Map<String,Object> setUpdateId(int userId,HttpSession httpSession){
+        Map<String, Object> resultMap = new HashMap<>();
+        httpSession.setAttribute("alterUser",userId);
+        resultMap.put("result", "success");
+        return resultMap;
+    }
+
     /**
      * 根据用户id获取用户详细信息
      *
@@ -203,6 +264,7 @@ public class UserController {
     @PostMapping(params = "getUserDetailById")
     @ResponseBody
     public Map<String, Object> getUserDetailById(int id) {
+        logger.info("传入用户id为:"+id);
         return userService.getUserDetailById(id);
     }
 }

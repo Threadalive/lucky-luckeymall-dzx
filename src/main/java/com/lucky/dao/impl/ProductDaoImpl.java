@@ -94,4 +94,12 @@ public class ProductDaoImpl implements ProductDao {
         }
         return productList;
     }
+
+    @Override
+    public int countProduct() {
+        String hql = "select max(id) from Product";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        Object count = query.list().get(0);
+        return Integer.parseInt(count.toString());
+    }
 }

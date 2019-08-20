@@ -2,6 +2,8 @@ package com.lucky.controller;
 
 import com.lucky.entity.ShoppingRecord;
 import com.lucky.service.ShoppingRecordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/shoppingRecord")
 public class ShoppingRecordController {
+
+    /**
+     * 日志服务
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ShoppingRecordController.class);
 
     /**
      * 订单记录的服务类
@@ -62,6 +69,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "getShoppingRecords")
     @ResponseBody
     public Map<String,Object> getShoppingRecords(int userId){
+        logger.info("传入用户id为:"+userId);
         return shoppingRecordService.getShoppingRecords(userId);
     }
 
@@ -74,8 +82,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "updateShoppingRecords")
     @ResponseBody
     public Map<String,Object> updateShoppingRecords(ShoppingRecord shoppingRecord){
-        System.out.println(shoppingRecord.getProductId());
-        System.out.println("..............");
+        logger.info("要更新订单记录的用户id为:"+shoppingRecord.getUserId());
         return shoppingRecordService.updateShoppingRecord(shoppingRecord);
     }
 
@@ -88,6 +95,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "addShoppingRecord")
     @ResponseBody
     public  Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord){
+        logger.info("要添加订单记录的用户id为:"+shoppingRecord.getUserId());
         return shoppingRecordService.addShoppingRecord(shoppingRecord);
     }
 
@@ -100,6 +108,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "getShoppingRecordByOrderStatus")
     @ResponseBody
     public Map<String,Object> getShoppingRecordByOrderStatus(int orderStatus){
+        logger.info("查询订单的订单状态为:"+orderStatus);
         if(orderStatus!=0&&orderStatus!=1&&orderStatus!=2){
             return null;
         }else
@@ -129,6 +138,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "getUserProductRecord")
     @ResponseBody
     public Map<String,Object> getUserProductRecord(int userId,int productId){
+        logger.info("查询订单的用户id与产品id分别是:"+userId+'\n'+productId);
         String result = "false";
         if(shoppingRecordService.getUserProductRecord(userId,productId)){
             result = "true";
@@ -148,6 +158,7 @@ public class ShoppingRecordController {
     @PostMapping(params = "deleteShoppingRecord")
     @ResponseBody
     public Map<String,Object> deleteShoppingRecord(int userId, int productId){
+        logger.info("指定订单的用户id与产品id分别是:"+userId+'\n'+productId);
         Map<String,Object> resultMap = new HashMap<String,Object>();
         if(shoppingRecordService.deleteShoppingRecord(userId,productId)){
             resultMap.put("result","success");

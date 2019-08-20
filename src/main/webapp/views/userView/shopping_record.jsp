@@ -22,9 +22,11 @@
 <div class="container-fluid bigHead">
     <div class="row">
         <div class="col-sm-10  col-md-10 col-sm-offset-1 col-md-offset-1">
-            <div class="jumbotron">
-                <h1>欢迎来到订单页</h1>
-                <p>您的购买清单为</p>
+            <div class="jumbotron" style="background: url('${contextPath}/bgimg/login_img03.png');background-position-x: center;height: 300px;">
+                <div style="position: relative;top: 80px;">
+                <h1 style="font-family: fantasy;color: darkcyan;">LuckyMall</h1>
+                <p style="font-family: cursive;color: white">您的购买清单</p>
+                </div>
             </div>
         </div>
         <div class="col-sm-10  col-md-10 col-sm-offset-1 col-md-offset-1">
@@ -38,7 +40,7 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="unHandle">
-                        <table class="table table-hover center" id="unHandleTable" style="margin-top: 10px;">
+                        <table class="table table-hover center" id="unHandleTable" style="margin-top: 10px;position: relative;right: 130px">
                         </table>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="transport">
@@ -50,7 +52,7 @@
                         </table>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="all">
-                        <table class="table table-hover center" id="allTable" style="margin-top: 10px;">
+                        <table class="table table-hover center"  id="allTable" style="margin-top: 10px;position: relative;right: 100px">
                         </table>
                     </div>
                 </div>
@@ -100,38 +102,38 @@
 
         // 未处理的订单块
         var unHandleHTML = '<tr>'+
-            '<th>商品名称</th>'+
-            '<th>购买数量</th>'+
-            '<th>付款金额</th>'+
-            '<th>订单状态</th>'+
+            '<th style="font-family: cursive;font-size: larger;">商品名称</th>'+
+            '<th style="font-family: cursive;font-size: larger;">购买数量</th>'+
+            '<th style="font-family: cursive;font-size: larger;">付款金额</th>'+
+            '<th style="font-family: cursive;font-size: larger;">订单状态</th>'+
             '</tr>';
 
         // 运输中的订单块
         var transportHTML = '<tr>'+
-            '<th>商品名称</th>'+
-            '<th>购买数量</th>'+
-            '<th>付款金额</th>'+
-            '<th>送货地址</th>'+
-            '<th>联系电话</th>'+
-            '<th>订单状态</th>'+
-            '<th>确认收货</th>'+
+            '<th style="font-family: cursive;font-size: larger;">商品名称</th>'+
+            '<th style="font-family: cursive;font-size: larger;">购买数量</th>'+
+            '<th style="font-family: cursive;font-size: larger;">付款金额</th>'+
+            '<th style="font-family: cursive;font-size: larger;">送货地址</th>'+
+            '<th style="font-family: cursive;font-size: larger;">联系电话</th>'+
+            '<th style="font-family: cursive;font-size: larger;">订单状态</th>'+
+            '<th style="font-family: cursive;font-size: larger;">确认收货</th>'+
             '</tr>';
 
         // 已收货的订单块
         var receiveHTML = '<tr>'+
-            '<th>商品名称</th>'+
-            '<th>购买数量</th>'+
-            '<th>付款金额</th>'+
-            '<th>订单状态</th>'+
-            '<th>评价</th>'+
+            '<th style="font-family: cursive;font-size: larger;">商品名称</th>'+
+            '<th style="font-family: cursive;font-size: larger;">购买数量</th>'+
+            '<th style="font-family: cursive;font-size: larger;">付款金额</th>'+
+            '<th style="font-family: cursive;font-size: larger;">订单状态</th>'+
+            '<th style="font-family: cursive;font-size: larger;">评价</th>'+
             '</tr>';
 
         // 所有订单
         var allHTML = '<tr>'+
-            '<th>商品名称</th>'+
-            '<th>购买数量</th>'+
-            '<th>付款金额</th>'+
-            '<th>订单状态</th>'+
+            '<th style="font-family: cursive;font-size: larger;">商品名称</th>'+
+            '<th style="font-family: cursive;font-size: larger;">购买数量</th>'+
+            '<th style="font-family: cursive;font-size: larger;">付款金额</th>'+
+            '<th style="font-family: cursive;font-size: larger;">订单状态</th>'+
             '</tr>';
 
         // 内容暂存变量
@@ -144,20 +146,20 @@
         for(var i=0;i<allShoppingRecords.length;i++){
             // 通过订单记录中的商品id获取商品对象
             var product = getProductById(allShoppingRecords[i].productId);
-            allHTMLTemp += '<tr>'+
-                '<td>'+product.productName+'</td>'+
-                '<td>'+allShoppingRecords[i].counts+'</td>'+
-                '<td>'+allShoppingRecords[i].productPrice+'</td>'+
-                '<td>'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
+            allHTMLTemp += '<tr style="height: 38px;">'+
+                '<td style="font-family: cursive;font-size: larger;">'+product.productName+'</td>'+
+                '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].counts+'</td>'+
+                '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].productPrice+'</td>'+
+                '<td style="font-family: cursive;font-size: larger;">'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
                 '</tr>';
             allCounts++;
             // 当订单状态为0，即未发货，设置未发货块的html内容
             if(allShoppingRecords[i].orderStatus == 0){
-                unHandleHTMLTemp+= '<tr>'+
-                    '<td>'+product.productName+'</td>'+
-                    '<td>'+allShoppingRecords[i].counts+'</td>'+
-                    '<td>'+allShoppingRecords[i].productPrice+'</td>'+
-                    '<td>'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
+                unHandleHTMLTemp+= '<tr style="height: 38px;">'+
+                    '<td style="font-family: cursive;font-size: larger;">'+product.productName+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].counts+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].productPrice+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
                     '</tr>';
                 unHandleCounts++;
             }
@@ -168,29 +170,29 @@
                 // 根据用户id获取用户电话号码
                 var phoneNumber = getUserPhoneNumber(allShoppingRecords[i].userId);
                 // 设置配送块的html代码，点击确认收货后调用receiveProducts函数设置订单状态
-                transportHTMLTemp+= '<tr>'+
-                    '<td>'+product.productName+'</td>'+
-                    '<td>'+allShoppingRecords[i].counts+'</td>'+
-                    '<td>'+allShoppingRecords[i].productPrice+'</td>'+
-                    '<td>'+address+'</td>'+
-                    '<td>'+phoneNumber+'</td>'+
-                    '<td>'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
-                    '<td>'+
-                    '<button class="btn btn-primary btn-sm" onclick="receiveProducts('+allShoppingRecords[i].userId+','+allShoppingRecords[i].productId+',\''+allShoppingRecords[i].createTime+'\')" style="    position: relative;\n' +
-                    '    top: -2px;">确认收货</button>'+
+                transportHTMLTemp+= '<tr style="height: 38px;">'+
+                    '<td style="font-family: cursive;font-size: larger;">'+product.productName+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].counts+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].productPrice+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+address+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+phoneNumber+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+
+                    '<button class="btn btn-primary btn-sm" onclick="receiveProducts('+allShoppingRecords[i].userId+','+allShoppingRecords[i].productId+',\''+allShoppingRecords[i].createTime+'\')" style="position: relative;\n' +
+                    '    top: -2px;background-color: rosybrown;border-color: white;">确认收货</button>'+
                     '</td>'+
                     '</tr>';
                 transportCounts++;
             }
             // 设置已收货块内容,点击评价调用函数进入评价页面
             else if(allShoppingRecords[i].orderStatus == 2){
-                receiveHTMLTemp += '<tr>'+
-                    '<td>'+product.productName+'</td>'+
-                    '<td>'+allShoppingRecords[i].counts+'</td>'+
-                    '<td>'+allShoppingRecords[i].productPrice+'</td>'+
-                    '<td>'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
-                    '<td>'+
-                    '<button class="btn btn-primary btn-sm" onclick="productDetail('+allShoppingRecords[i].productId+')">评价</button>'+
+                receiveHTMLTemp += '<tr style="height: 38px;">'+
+                    '<td style="font-family: cursive;font-size: larger;">'+product.productName+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].counts+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+allShoppingRecords[i].productPrice+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+orderArray[allShoppingRecords[i].orderStatus]+'</td>'+
+                    '<td style="font-family: cursive;font-size: larger;">'+
+                    '<button class="btn btn-primary btn-sm" style="background-color: rosybrown;border-color: white;" onclick="productDetail('+allShoppingRecords[i].productId+')">评价</button>'+
                     '</td>'+
                     '</tr>';
                 receiveCounts++;
@@ -202,7 +204,7 @@
             unHandleHTML='<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2>没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -214,7 +216,7 @@
             transportHTML = '<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2>没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -224,7 +226,7 @@
             receiveHTML = '<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2>没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -234,7 +236,7 @@
             allHTML = '<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2>没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -273,24 +275,6 @@
             }
         });
         return product;
-    }
-
-    // 根据用户id获取地址信息
-    function getUserAddress(id) {
-        var user = {};
-        user.userId = id;
-        $.ajax({
-            type : 'POST',
-            url : '${contextPath}/user?getUserNameAndPhoneNumber',
-            data : user,
-            dataType : 'json',
-            success : function(result) {
-                return result.address;
-            },
-            error : function(result) {
-                layer.alert('查询错误');
-            }
-        });
     }
 
     // 根据用户id获取地址信息

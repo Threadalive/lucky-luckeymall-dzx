@@ -66,4 +66,11 @@ public interface ProductDao {
      * @return java.util.List<com.lucky.entity.Product>
      */
     List<Product> getAllProduct();
+
+    /**
+     * 获取商品数目
+     *
+     * @return 商品数目
+     */
+    int countProduct();
 }

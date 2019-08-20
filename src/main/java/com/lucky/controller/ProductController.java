@@ -1,8 +1,11 @@
 package com.lucky.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lucky.entity.Product;
 import com.lucky.service.ProductService;
 import com.lucky.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +27,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+    /**
+     * logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     /**
      * 引用商品管理的服务类。
      */
@@ -42,6 +50,18 @@ public class ProductController {
         return view;
     }
 
+
+    /**
+     * 返回一个商品信息修改页面
+     *
+     * @return 商品信息修改页面
+     */
+    @GetMapping(params = "alterProductMsg")
+    public ModelAndView getAlterProductPage() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("admin/alter_product_msg");
+        return view;
+    }
     /**
      * 给前台返回一个搜索页面
      *
@@ -71,15 +91,34 @@ public class ProductController {
      * 实现商品添加功能。
      *
      * @param product 添加商品的具体对象
-     * @return java.util.Map<java.lang.String , java.lang.Object>
-     * @author zhenxing.dong@luckincoffee.com
+     * @return 商品添加结果
      */
     @PostMapping(params = "addProduct")
     @ResponseBody
-    public Map<String, Object> addProduct(Product product) {
-        return productService.addProduct(product);
+    public Map<String, Object> addProduct(Product product, MultipartFile file, HttpServletRequest request) {
+        logger.info(JSONObject.toJSONString(file));
+        return productService.addProduct(product,file,request);
     }
 
+
+    /**
+     * 实现商品添加功能。
+     *
+     * @param product 添加商品的具体对象
+     * @return 商品添加结果
+     */
+    @PostMapping(params = "updateProduct")
+    @ResponseBody
+    public Map<String, Object> updateProduct(Product product, MultipartFile file, HttpServletRequest request) {
+        Map<String,Object> resultMap = new HashMap<>();
+        logger.info(JSONObject.toJSONString(file));
+        if(productService.updateProduct(product,file,request)){
+            resultMap.put("result","success");
+        }else {
+            resultMap.put("result","fail");
+        }
+        return resultMap;
+    }
     /**
      * 实现商品的删除功能。
      *
@@ -121,6 +160,21 @@ public class ProductController {
     }
 
     /**
+     * 根据商品类型查询相关商品，信息以字符串形式返回给前台。
+     *
+     * @param type 用户查询的类型
+     * @return 搜索结果
+     */
+    @PostMapping(params = "searchProductByType")
+    @ResponseBody
+    public Map<String, Object> searchProductByType(int type) {
+        Map<String,Object> resultMap = new HashMap<>();
+
+        List<Product> productList = productService.getProductsByType(type);
+        resultMap.put("result",productList);
+        return resultMap;
+    }
+    /**
      * 实现根据商品的id获取到指定商品，并将其商品信息以字符串形式返回。
      *
      * @param id 要查询的商品id
@@ -132,6 +186,14 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+    @PostMapping(params = "setId")
+    @ResponseBody
+    public Map<String,Object> setUpdateId(int id,HttpSession httpSession){
+        Map<String, Object> resultMap = new HashMap<>();
+        httpSession.setAttribute("alterProduct",id);
+        resultMap.put("result", "success");
+        return resultMap;
+    }
     /**
      * 实现获取全部商品功能。
      *
@@ -141,19 +203,5 @@ public class ProductController {
     @ResponseBody
     public Map<String, Object> getAllProducts() {
         return productService.getAllProduct();
-    }
-
-    /**
-     * 使用MultipartFile实现商品图片的上传功能。
-     *
-     * @param productImgUpload 图片文件上传对象
-     * @param productName      指定商品名
-     * @param request          用户请求
-     * @return 上传结果
-     */
-    @PostMapping(params = "uploadFile")
-    @ResponseBody
-    public Map<String, Object> uploadFile(@RequestParam MultipartFile productImgUpload, String productName, HttpServletRequest request) {
-        return productService.uploadFile(productImgUpload,productName,request);
     }
 }

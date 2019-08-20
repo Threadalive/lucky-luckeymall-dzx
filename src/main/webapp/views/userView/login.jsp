@@ -81,6 +81,10 @@
                 layer.msg('登录成功',{icon:1,time:2000},function(){
                     window.location.href = "${contextPath}/user?main";
                 });
+            }else if(loginResult == 'admin'){
+                layer.msg('管理员登录',{icon:1,time:2000},function(){
+                    window.location.href = "${contextPath}/user?control";
+                });
             }
             else if(loginResult == 'nameUnexist'){
                 layer.msg('是不是用户名记错了？',{icon:2});

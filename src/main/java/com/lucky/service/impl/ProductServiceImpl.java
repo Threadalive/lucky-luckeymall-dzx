@@ -8,6 +8,7 @@ import com.lucky.entity.Product;
 import com.lucky.service.ProductService;
 import com.lucky.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,13 +62,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> addProduct(Product product) {
+    public Map<String, Object> addProduct(Product product, MultipartFile file, HttpServletRequest request) {
         String result = "fail";
-        productDao.addProduct(product);
         Map<String, Object> resultMap = new HashMap<>();
+        //当productImgUpload不为空时
+        if (file != null && !file.isEmpty()) {
+            //通过请求获取文件夹的路径
+            String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
+            System.out.println(fileRealPath);
+            //根据获取的商品id选取img文件夹下的对应图片的文件名
+            int id = productDao.countProduct()+1;
+            product.setId(id);
+            String imgFileName = String.valueOf(id) + ".jpg";
+            System.out.println(fileRealPath+imgFileName);
+            File fileFolder = new File(fileRealPath);
+            //若文件夹不存在则创建一个
+            if (!fileFolder.exists()) {
+                fileFolder.mkdirs();
+            }
+            try {
+                //创建具体文件，进行上传
+                File uploadFile = new File(fileRealPath, imgFileName);
+                file.transferTo(uploadFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        productDao.addProduct(product);
         result = "success";
         resultMap.put("result", result);
-        return resultMap;
+    }
+    return resultMap;
     }
 
     @Override
@@ -84,7 +108,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean updateProduct(Product product) {
+    public boolean updateProduct(Product product, MultipartFile file, HttpServletRequest request) {
+        //当productImgUpload不为空时
+        if (file != null && !file.isEmpty()) {
+            //通过请求获取文件夹的路径
+            String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
+            System.out.println(fileRealPath);
+            //根据获取的商品id选取img文件夹下的对应图片的文件名
+            int id = product.getId();
+            String imgFileName = String.valueOf(id) + ".jpg";
+            System.out.println(fileRealPath+imgFileName);
+            File fileFolder = new File(fileRealPath);
+            //若文件夹不存在则创建一个
+            if (!fileFolder.exists()) {
+                fileFolder.mkdirs();
+            }
+            try {
+                //创建具体文件，进行上传
+                File uploadFile = new File(fileRealPath, imgFileName);
+                if(uploadFile.exists()){
+                    uploadFile.delete();
+                    File upload1 = new File(fileRealPath, imgFileName);
+                    file.transferTo(uploadFile);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
         return productDao.updateProduct(product);
     }
 
@@ -123,38 +173,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Object> getProductById(int id) {
         Product product = productDao.getProduct(id);
-//        String searchResult = JSONArray.toJSONString(product);
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", product);
-        return resultMap;
-    }
-
-    @Override
-    public Map<String, Object> uploadFile(MultipartFile productImgUpload, String productName, HttpServletRequest request) {
-        String result = "fail";
-        try {
-            //当productImgUpload不为空时
-            if (productImgUpload != null && !productImgUpload.isEmpty()) {
-                //通过请求获取文件夹的路径
-                String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
-                //根据获取的商品id选取img文件夹下的对应图片的文件名
-                int id = getProduct(productName).getId();
-                String imgFileName = String.valueOf(id) + ".jpg";
-                File fileFolder = new File(fileRealPath);
-                //若文件夹不存在则创建一个
-                if (!fileFolder.exists()) {
-                    fileFolder.mkdirs();
-                }
-                //获取具体文件，进行上传
-                File file = new File(fileRealPath, imgFileName);
-                productImgUpload.transferTo(file);
-                result = "success";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("result", result);
         return resultMap;
     }
 }

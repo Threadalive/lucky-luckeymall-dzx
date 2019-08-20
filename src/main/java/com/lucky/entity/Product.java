@@ -43,9 +43,9 @@ public class Product {
      */
     private int type;
 
+//    @GenericGenerator(name = "generator", strategy = "increment") //设置主键自增
+//    @GeneratedValue(generator = "generator")
     @Id
-    @GenericGenerator(name = "generator", strategy = "increment") //设置主键自增
-    @GeneratedValue(generator = "generator")
     @Column(name = "id")
     public int getId() {
         return id;

@@ -2,7 +2,6 @@ package com.lucky.service;
 
 import com.lucky.entity.Product;
 import com.lucky.util.Response;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +20,14 @@ public interface ProductService {
     Product getProduct(String productName);
 
     /**
-     * 实现添加商品对象。
+     * 商品对象添加
      *
-     * @param product 产品对象
-     * @return void
+     * @param product 商品对象
+     * @param file 图片文件
+     * @param request 请求
+     * @return 上传结果
      */
-    Map<String, Object> addProduct(Product product);
+    Map<String, Object> addProduct(Product product, MultipartFile file, HttpServletRequest request);
 
     /**
      * 实现根据指定id删除对应商品。
@@ -42,7 +43,7 @@ public interface ProductService {
      * @param product 更新的产品对象
      * @return boolean true:更新成功 false:更新失败
      */
-    boolean updateProduct(Product product);
+    boolean updateProduct(Product product, MultipartFile file, HttpServletRequest request);
 
     /**
      * 根据商品关键字查询相关商品，信息以字符串形式返回给前台。
@@ -83,14 +84,4 @@ public interface ProductService {
      * @return 搜索结果
      */
     Map<String, Object> getProductById(int id);
-
-    /**
-     * 执行商品图片上传操作
-     *
-     * @param productImgUpload 上传商品图片
-     * @param productName 商品名
-     * @param request 请求
-     * @return 上传结果
-     */
-    Map<String, Object> uploadFile(@RequestParam MultipartFile productImgUpload, String productName, HttpServletRequest request);
 }

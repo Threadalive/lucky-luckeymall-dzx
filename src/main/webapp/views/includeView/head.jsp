@@ -18,8 +18,8 @@
 </head>
 <body>
 <!--导航栏部分-->
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
+<nav class="navbar navbar-default navbar-fixed-top" style="height: 62px;">
+    <div class="container-fluid" style="height: 60px">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
                 <span class="sr-only">Toggle navigation</span>
@@ -27,8 +27,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <c:if test="${currentUser.role == 0}">
             <a class="navbar-brand" href="${contextPath}/user?main" style="color: crimson;font-size: x-large;font-family: fantasy">LuckyMall</a>
-            <img src="${contextPath}/bgimg/tel.gif" style="position: absolute;bottom: 11px;right: 430px;" onclick="call()" />
+            </c:if>
+            <c:if test="${empty currentUser}">
+                <a class="navbar-brand" href="${contextPath}/user?main" style="color: crimson;font-size: x-large;font-family: fantasy">LuckyMall</a>
+            </c:if>
+            <c:if test="${currentUser.role == 1}">
+                <h2 class="navbar-brand" href="${contextPath}/user?main" style="color: crimson;font-size: x-large;font-family: fantasy">LuckyMall</h2>
+            </c:if>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
@@ -47,24 +54,27 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="${contextPath}/shoppingCar">购物车</a></li>
+                            <c:if test="${currentUser.role == 0}">
                             <li><a href="${contextPath}/shoppingRecord?showShoppingRecord">订单状态</a></li>
-                            <c:if test="${currentUser.role == 1}">
-                                <li><a href="${contextPath}/shoppingRecord?shoppingRecordHandle">处理订单</a></li>
                             </c:if>
-                            <li role="separator" class="divider"></li>
+                            <%--<li role="separator" class="divider"></li>--%>
                             <li><a href="${contextPath}/user?updateSelfInfo">个人资料修改</a></li>
+                            <li role="separator" class="divider"></li>
                             <li><a href="" onclick="doLogout()">注销登录</a></li>
                         </ul>
                     </li>
                 </c:if>
             </ul>
-
-            <div class="navbar-form navbar-right">
+            <div class="navbar-form navbar-right" style="position: relative;left: 15px">
+                <img src="${contextPath}/bgimg/tel.gif" style="position: relative;right: 10px" onclick="call()" />
+                <c:if test="${currentUser.role !=1}">
+                <a style="font-family: cursive;font-size: 20px;color: dimgrey;position: relative;top: 2px;" href="${contextPath}/shoppingCar">购物车</a>
+                <img src="${contextPath}/bgimg/spcarlogo.jpg" width="20px" height="20px" style="position: relative;right: 5px">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="" id="searchKeyWord"/>
                 </div>
                 <button class="btn btn-default" onclick="searchProduct();">查找商品</button>
+                </c:if>
             </div>
         </div>
     </div>
@@ -105,7 +115,7 @@
     }
 
     function call(){
-        layer.msg('详情请致电 18160744093~',{icon:1,time:4000}
+        layer.msg('客服电话 18160744093~',{icon:1,time:4000}
         );
     }
     function doLogout() {

@@ -46,16 +46,21 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
 
     @Override
     public boolean deleteShoppingCar(int userId, int productId) {
-        String hql = "from ShoppingCar where userId=? and productId=?";
+//        String hql = "from ShoppingCar where userId=? and productId=?";
+//        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+//        query.setParameter(0,userId);
+//        query.setParameter(1,productId);
+//        try {
+//            hibernateTemplate.deleteAll(query.list());
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+        String hql = "delete ShoppingCar where userId=? and productId=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter(0,userId);
-        query.setParameter(1,productId);
-        try {
-            hibernateTemplate.deleteAll(query.list());
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        query.setParameter(0, userId);
+        query.setParameter(1, productId);
+        return query.executeUpdate() > 0;
     }
 
     @Override

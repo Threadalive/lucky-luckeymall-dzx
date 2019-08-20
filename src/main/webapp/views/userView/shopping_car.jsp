@@ -23,9 +23,11 @@
 <div class="container-fluid bigHead">
     <div class="row">
         <div class="col-sm-10  col-md-10 col-sm-offset-1 col-md-offset-1">
-            <div class="jumbotron">
-                <h1>欢迎来到购物车</h1>
-                <p>您的购物车清单为</p>
+            <div class="jumbotron" style="background: url('${contextPath}/bgimg/spcar.jpg');background-position-x: center;height: 300px;">
+                <div style="position: relative;top: 70px;">
+                <h1 style="font-family: fantasy;color: darkcyan;">LuckyMall</h1>
+                <p style="font-family: inherit;color: darkred;">您的购物车清单</p>
+                </div>
             </div>
         </div>
         <div class="col-sm-10  col-md-10 col-sm-offset-1 col-md-offset-1">
@@ -35,7 +37,7 @@
             <hr/>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-4"></div>
-                <button type="button" class="btn btn-danger btn-lg col-lg-4 col-md-4 col-sm-4" onclick="confirmPre()">确认购买</button>
+                <button type="button" class="btn btn-danger btn-lg col-lg-4 col-md-4 col-sm-4" style="position: relative;left: 560px;width: 100px;height: 30px;font-size: larger;padding-bottom: 0px;padding-top: 0px;font-family: cursive;" onclick="confirmPre()">确认购买</button>
             </div>
         </div>
     </div>
@@ -45,7 +47,7 @@
 <jsp:include page="../includeView/foot.jsp"/>
 </body>
 <script type="text/javascript">
-
+    var totalPrice = 0;
     updateShoppingCars();
 
     //更新购物车列表
@@ -160,7 +162,7 @@
     function buyConfirm(productsId,productsCounts) {
         var address = getUserAddress(${currentUser.id});
         var phoneNumber = getUserPhoneNumber(${currentUser.id});
-        var totalPrice = 0;
+        // var totalPrice = 0;
         if(address!=""&&address!=null) {
             var html = '<div class="col-sm-1 col-md-1 col-lg-1"></div>' +
                 '<div class="col-sm-10 col-md-10 col-lg-10">' +
@@ -196,14 +198,14 @@
                 '</table>' +
                 '<div class="row">' +
                 '<div class="col-sm-4 col-md-4 col-lg-4"></div>' +
-                '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecordsPre([' + productsId + '],[' + productsCounts + '])">确认购买</button>' +
+                '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" style="position: relative;bottom: 10px" onclick="addToShoppingRecordsPre([' + productsId + '],[' + productsCounts + '])">确认支付</button>' +
                 '</div>' +
                 '</div>';
             layer.open({
                 type: 1,
                 title: '请确认订单信息：',
                 content: html,
-                area: ['650px', '350px'],
+                area: ['650px', '380px'],
             });
         }
     }
@@ -261,14 +263,52 @@
         for(var i=0;i<productsId.length;i++){
             addToShoppingRecords(productsId[i],productsCounts[i]);
         }
-        layer.confirm('前往订单状态？', {icon: 1, title:'购买成功',btn:['前往订单','继续购买']},
-            function(){
-                window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
-            },
-            function(index){
-                window.location.href = "${contextPath}/shoppingCar";
-            }
-        );
+        <%--layer.msg('支付成功', {icon: 1, title:'支付详情'},--%>
+            <%--function(){--%>
+                <%--window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";--%>
+            <%--},--%>
+            <%--function(index){--%>
+                <%--window.location.href = "${contextPath}/shoppingCar";--%>
+            <%--}--%>
+        <%--);--%>
+        addScore();
+    }
+
+    function addScore(productId) {
+        if(judgeIsLogin()){
+            var product = getProductById(productId);
+            var income = parseInt(totalPrice*0.05);
+
+            var userScore = {};
+            userScore.income = income;
+            userScore.userId = '${currentUser.id}';
+            userScore.productName = product.productName;
+            $.ajax({
+                async: false,
+                type : 'POST',
+                url : '${contextPath}/score?addScore',
+                data : userScore,
+                dataType : 'json',
+                success : function(result) {
+                    if(result.result == "success") {
+                        layer.msg('支付成功！用户积分+'+income+'!', {icon: 1, title:'支付详情'},
+                            function () {
+                                window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
+                            },
+                            function(index){
+                                layer.close(index);
+                            }
+                        );
+                    }
+                    else if(result.result == "fail"){
+                        layer.msg("积分增加出错咯");
+                    }
+                },
+                error : function(result) {
+                    layer.alert('出错咯~再试试吧');
+                }
+            });
+        }
     }
 
     function addToShoppingRecords(productId,productCounts) {
@@ -296,7 +336,7 @@
         if(buyResult == "success") {
             //删除购物车对应记录
             deleteShoppingCar(productId);
-            layer.msg("商品 "+product.productName+" 购买成功",{icon:1});
+            // layer.msg("商品 "+product.productName+" 购买成功",{icon:1});
         }
         else if(buyResult == "unEnough"){
             layer.alert("商品 "+product.name+" 库存不足，购买失败");

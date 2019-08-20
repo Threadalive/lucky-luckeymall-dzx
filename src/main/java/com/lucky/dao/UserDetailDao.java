@@ -44,4 +44,19 @@ public interface UserDetailDao {
      * @return 所有用户详细信息对象
      */
     List<UserDetail> getAllUserDetail();
+
+    /**
+     * 更新用户积分
+     *
+     * @return boolean true:更新成功 false:更新失败
+     */
+    boolean updateUserScore(int userId,int score);
+
+    /**
+     * 根据用户id获取其当前总积分
+     *
+     * @param userId 用户积分
+     * @return 用户积分
+     */
+    int getUserScore(int userId);
 }

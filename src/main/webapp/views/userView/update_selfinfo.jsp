@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="confirm_password" class="col-sm-2 col-md-2 control-label">再次输入密码</label>
+                    <label for="confirm_password" class="col-sm-2 col-md-2 control-label">确认密码</label>
                     <div class="col-sm-6 col-md-6">
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="禁止输入非法字符"/>
                     </div>
