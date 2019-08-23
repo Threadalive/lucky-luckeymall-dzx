@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 /**
  * @Description 用户细节信息实体类
+ *
  * @Author zhenxing.dong@luckincoffee.com
  * @Date 2019/8/2 10:58
  */

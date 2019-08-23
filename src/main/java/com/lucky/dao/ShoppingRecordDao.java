@@ -4,6 +4,12 @@ import com.lucky.entity.ShoppingRecord;
 
 import java.util.List;
 
+/**
+ * @Description 订单记录信息的操作层接口，定义订单信息的增删改查方法。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 22:16
+ */
 public interface ShoppingRecordDao {
     /**
      * 根据用户id，商品id，创建时间查询唯一的订单记录。
@@ -86,4 +92,11 @@ public interface ShoppingRecordDao {
      * @return boolean true:删除成功 false:删除失败
      */
     boolean deleteShoppingRecordByProductId(int productId);
+
+    /**
+     * 获取订单总数
+     *
+     * @return 订单总数
+     */
+    int getOrderCount();
 }

@@ -17,6 +17,9 @@ import java.util.List;
 @Service
 public class UserDetailServiceImpl implements UserDetailService {
 
+    /**
+     * 用户详细信息操作层的dao类
+     */
     @Autowired
     UserDetailDao userDetailDao;
 

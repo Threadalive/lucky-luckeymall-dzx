@@ -4,6 +4,12 @@ import com.lucky.entity.ShoppingCar;
 
 import java.util.List;
 
+/**
+ * @Description 购物车的操作层接口，定义购物车的增删改查方法。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 22:16
+ */
 public interface ShoppingCarDao {
     /**
      * 根据用户id与商品id查询指定购物车记录

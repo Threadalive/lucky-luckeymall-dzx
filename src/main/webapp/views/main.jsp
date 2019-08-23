@@ -130,12 +130,12 @@
         $.ajax({
             async: false,
             type: 'POST',
-            url: '${contextPath}/product?getAllProducts',
+            url: '${contextPath}/product?getAllProduct',
             data: nothing,
             dataType: 'json',
             success: function (result) {
                 if(result!=null){
-                    allProducts = result.allProducts;
+                    allProducts = result.list;
                 }else {
                     layer.alert('获取商品失败咯~~');
                 }

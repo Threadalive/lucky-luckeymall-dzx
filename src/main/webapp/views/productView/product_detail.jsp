@@ -33,28 +33,28 @@
             <table class="table table-striped" width='100%' border='0' cellspacing='0' cellpadding='0' class='mytable' style='table-layout: fixed'>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">商品名称</th>
-                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.productName}</td>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive;text-align: left;'>${productDetail.productName}</td>
                 </tr>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">商品价格</th>
-                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>￥<fmt:formatNumber type="number" value="${productDetail.price}" maxFractionDigits="2" />
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive;text-align: left;'>￥<fmt:formatNumber type="number" value="${productDetail.price}" maxFractionDigits="2" />
                     </td>
                 </tr>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">商品描述</th>
-                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.description}</td>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive;text-align: left;'>${productDetail.description}</td>
                 </tr>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">商品类别</th>
-                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.type}</td>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive;text-align: left;'>${productDetail.type}</td>
                 </tr>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">商品库存</th>
-                    <td colspan='3' style='word-wrap: break-word;font-family: cursive'>${productDetail.counts}</td>
+                    <td colspan='3' style='word-wrap: break-word;font-family: cursive;text-align: left;'>${productDetail.counts}</td>
                 </tr>
                 <tr style="height: 85px">
                     <th style="font-family: cursive;font-size: large;">购买数量</th>
-                    <td style="position: relative;left: 125px;">
+                    <td style="text-align: left;">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default" onclick="subCounts()">-</button>
                             <button id="productCounts" type="button" class="btn btn-default">1</button>
@@ -164,6 +164,7 @@
         var productCounts = $("#productCounts");
         var counts = parseInt(productCounts.html());
         var product = getProductById(productId);
+        var totalPrice = counts*product.price;
         var html = '<div class="col-sm-1 col-md-1 col-lg-1"></div>'+
             '<div class="col-sm-10 col-md-10 col-lg-10">'+
             '<table class="table confirm-margin">'+
@@ -181,7 +182,10 @@
             '</tr>'+
             '<tr>'+
             '<th>总金额：</th>'+
-            '<td>'+counts*product.price+'</td>'+
+            '<td>'+totalPrice+'</td>'+
+            '<tr>'+
+            '<th>折合积分：</th>'+
+            '<td>'+(counts*product.price)*10+'</td>'+
             '</tr>'+
             '<tr>'+
             '<th>收货地址：</th>'+
@@ -194,14 +198,15 @@
             '</table>'+
             '<div class="row">'+
             '<div class="col-sm-4 col-md-4 col-lg-4"></div>'+
-            '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" onclick="addToShoppingRecords('+productId+')">确认支付</button>'+
+            '<button class="btn btn-danger col-sm-4 col-md-4 col-lg-4" style="position: relative;left: 20%;" onclick="judgePay('+productId+','+0+','+totalPrice+')">立即支付</button>'+
+            '<button class="btn btn-primary col-sm-4 col-md-4 col-lg-4" style="position: relative;right: 53%;" onclick="judgePay('+productId+','+1+','+0+')">积分支付</button>'+
             '</div>'+
             '</div>';
         layer.open({
             type:1,
             title:'请确认订单信息：',
             content:html,
-            area:['650px','350px']
+            area:['650px','380px']
         });
         }
         }
@@ -246,8 +251,25 @@
         }
     }
 
-    // 添加到订单记录
-    function addToShoppingRecords(productId) {
+    function judgePay(productId, type, totalPrice) {
+        if(type == 0){
+            layer.prompt({title: '请输入付款金额'},function(value, index){
+                if(value != totalPrice){
+                    layer.msg('请输入正确金额',{icon:5,time:2000})
+                }
+                else {
+                    layer.close(index);
+                    addToShoppingRecords(productId, type, totalPrice);
+                }
+            });
+        }else {
+            addToShoppingRecords(productId, type, totalPrice);
+        }
+    }
+
+    // 添加到订单记录，type=0为真实支付，type=1位积分支付
+    function addToShoppingRecords(productId,type,totalPrice) {
+
         if(judgeIsLogin()){
         var productCounts = $("#productCounts");
         var counts = parseInt(productCounts.html());
@@ -255,6 +277,7 @@
         shoppingRecord.userId = '${currentUser.id}';
         shoppingRecord.productId = productId;
         shoppingRecord.counts = counts;
+        shoppingRecord.type = type;
         $.ajax({
             async: false,
             type : 'POST',
@@ -263,14 +286,16 @@
             dataType : 'json',
             success : function(result) {
                 if(result.result == "success") {
-                    // layer.msg('支付成功!', {icon: 1, title:'支付详情'},
-                        addScore(productId),
-                        function(index){
-                            layer.close(index);}
-                    // );
+                        addScore(productId);
+                }else if(result.result == "scorePaySuccess"){
+                    layer.msg('积分支付成功！',{icon:1,time:2000},function () {
+                        window.location.href="${contextPath}/shoppingRecord?showShoppingRecord"
+                    })
+                }else if(result.result == "scoreUnEnough"){
+                    layer.msg('当前账户积分不足！',{icon:2,time:2000})
                 }
                 else if(buyResult == "unEnough"){
-                    layer.alert("库存不足，亲下回再买哦~");
+                    layer.alert("库存不足，亲下回再来哦~");
                 }
             },
             error : function(result) {

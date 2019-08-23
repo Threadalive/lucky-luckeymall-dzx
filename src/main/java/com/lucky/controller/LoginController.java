@@ -1,6 +1,8 @@
 package com.lucky.controller;
 
 import com.lucky.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,16 +28,21 @@ public class LoginController {
     UserService userService;
 
     /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
+    /**
      * 当用户get请求访问/login时，分配到这个方法，返回一个登陆页面的视图。
      * URL如：http://127.0.0.1:8080/login/
      *
      * @return 登陆页视图
      */
-
     @GetMapping
     public ModelAndView login(){
         ModelAndView view=new ModelAndView();
         view.setViewName("userView/login");
+        LOGGER.info("返回登陆页视图"+view.getViewName());
         return  view;
     }
 
@@ -51,6 +58,7 @@ public class LoginController {
     @PostMapping
     @ResponseBody
     public Map<String,Object> doLogin(String nameOrEmail, String password, HttpSession httpSession){
+        LOGGER.info("用户登录传入参数"+nameOrEmail+'\n'+password +'\n'+httpSession);
         return userService.doLogin(nameOrEmail,password,httpSession);
     }
 }

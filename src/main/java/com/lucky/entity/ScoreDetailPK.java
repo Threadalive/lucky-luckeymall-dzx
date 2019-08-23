@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 /**
  * @Description 积分表的主键类
- *
  * @Author zhenxing.dong
  * @Date 2019/8/19 16:07
  */
 public class ScoreDetailPK implements Serializable {
+    /**
+     * 种子
+     */
+    private final static int SALT = 31;
     /**
      * 用户id
      */
@@ -37,18 +40,24 @@ public class ScoreDetailPK implements Serializable {
     @Override
     public int hashCode() {
         int result = getUserId();
-        result = 31 * result;
+        result = SALT * result;
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ScoreDetailPK)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ScoreDetailPK)) {
+            return false;
+        }
 
         ScoreDetailPK that = (ScoreDetailPK) obj;
 
-        if (getUserId() != that.getUserId()) return false;
-        return getCreateTime()== (that.getCreateTime());
+        if (getUserId() != that.getUserId()) {
+            return false;
+        }
+        return getCreateTime() == (that.getCreateTime());
     }
 }

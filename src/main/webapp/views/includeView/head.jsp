@@ -46,7 +46,7 @@
                 </c:if>
                 <c:if test="${not empty currentUser}">
                     <c:if test="${currentUser.role == 1}">
-                        <li><a href="${contextPath}/user?control">控制台</a></li>
+                        <li><a href="${contextPath}/adminControl?control">控制台</a></li>
                     </c:if>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">
@@ -58,7 +58,7 @@
                             <li><a href="${contextPath}/shoppingRecord?showShoppingRecord">订单状态</a></li>
                             </c:if>
                             <%--<li role="separator" class="divider"></li>--%>
-                            <li><a href="${contextPath}/user?updateSelfInfo">个人资料修改</a></li>
+                            <li><a href="${contextPath}/user?updateSelfInfo">个人信息</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="" onclick="doLogout()">注销登录</a></li>
                         </ul>
@@ -115,7 +115,7 @@
     }
 
     function call(){
-        layer.msg('客服电话 18160744093~',{icon:1,time:4000}
+        layer.msg('客服电话 18160744093~',{icon:1,time:2000,offset:'center',offset:'300px'}
         );
     }
     function doLogout() {

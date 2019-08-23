@@ -4,12 +4,17 @@ import com.lucky.entity.User;
 
 import java.util.List;
 
+/**
+ * @Description 用户基本信息的操作层接口，定义用户详细信息的增删改查方法。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 22:16
+ */
 public interface UserDao{
     /**
      * 实现用户对象添加。
      *
      * @param user 注册用户对象
-     * @return void
      */
     void addUser(User user);
 
@@ -48,7 +53,16 @@ public interface UserDao{
     /**
      * 获取所有用户，以List<User>的形式返回。
      *
-     * @return 用户对象列表
+     * @param offset 起始位置
+     * @param length 长度
+     * @return 用户列表
      */
-    List<User> getAllUser();
+    List<User> getAllUser(int offset,int length);
+
+    /**
+     * 统计用户数量
+     *
+     * @return 用户数量
+     */
+    int getUserCount();
 }

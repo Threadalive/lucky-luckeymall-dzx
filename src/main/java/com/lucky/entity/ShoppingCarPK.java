@@ -4,12 +4,22 @@ import java.io.Serializable;
 
 /**
  * @Description 购物车主键类
- *
  * @Author zhenxing.dong
  * @Date 2019/8/9 15:29
  */
 public class ShoppingCarPK implements Serializable {
+    /**
+     * 种子
+     */
+    private final static int SALT = 31;
+    /**
+     * 用户id
+     */
     private int userId;
+
+    /**
+     * 商品id
+     */
     private int productId;
 
     public int getUserId() {
@@ -30,12 +40,18 @@ public class ShoppingCarPK implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ShoppingCarPK)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ShoppingCarPK)) {
+            return false;
+        }
 
         ShoppingCarPK that = (ShoppingCarPK) o;
 
-        if (userId != that.userId) return false;
+        if (userId != that.userId) {
+            return false;
+        }
         return productId == that.productId;
 
     }
@@ -43,7 +59,7 @@ public class ShoppingCarPK implements Serializable {
     @Override
     public int hashCode() {
         int result = userId;
-        result = 31 * result + productId;
+        result = SALT * result + productId;
         return result;
     }
 }

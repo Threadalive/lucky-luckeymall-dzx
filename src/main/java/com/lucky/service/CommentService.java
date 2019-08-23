@@ -3,6 +3,12 @@ package com.lucky.service;
 import com.lucky.entity.Comment;
 import java.util.Map;
 
+/**
+ * @Description 评论类的服务类
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/13 01:12
+ */
 public interface CommentService {
     /**
      * 通过用户id、商品id、创建时间获取指定评价对象
@@ -14,9 +20,10 @@ public interface CommentService {
     Map<String,Object> getComment(int userId, int productId, long createTime);
 
     /**
-     * 添加评价项
+     * 添加评价
      *
      * @param comment 要添加的评价对象
+     * @return 添加结果
      */
     Map<String,Object> addComment(Comment comment);
 

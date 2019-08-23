@@ -4,6 +4,8 @@ import com.lucky.dao.CommentDao;
 import com.lucky.entity.Comment;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,11 @@ public class CommentDaoImpl implements CommentDao {
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
+
     @Override
     public Comment getComment(int userId, int productId, long createTime) {
         String hql = "from Comment where userId=? and productId=? and createTime=?";
@@ -37,12 +44,14 @@ public class CommentDaoImpl implements CommentDao {
         query.setParameter(0, userId);
         query.setParameter(1, productId);
         query.setParameter(2, createTime);
+        LOGGER.info("成功设置参数");
         return (Comment) query.uniqueResult();
     }
 
     @Override
     public void addComment(Comment comment) {
         hibernateTemplate.save(comment);
+        LOGGER.info("评论添加成功");
     }
 
     @Override
@@ -52,6 +61,7 @@ public class CommentDaoImpl implements CommentDao {
         query.setParameter(0, userId);
         query.setParameter(1, productId);
         query.setParameter(2, createTime);
+        LOGGER.info("成功设置删除参数");
         return query.executeUpdate() > 0;
     }
 
@@ -64,6 +74,7 @@ public class CommentDaoImpl implements CommentDao {
             hibernateTemplate.update(comment);
             return true;
         } catch (Exception e) {
+            LOGGER.error("更新失败",e.getMessage());
             return false;
         }
     }
@@ -85,6 +96,7 @@ public class CommentDaoImpl implements CommentDao {
             hibernateTemplate.deleteAll(query.list());
             return true;
         } catch (Exception e) {
+            LOGGER.error("用户评论删除失败",e.getMessage());
             return false;
         }
     }
@@ -98,6 +110,7 @@ public class CommentDaoImpl implements CommentDao {
             hibernateTemplate.deleteAll(query.list());
             return true;
         } catch (Exception e) {
+            LOGGER.error("商品评论删除失败",e.getMessage());
             return false;
         }
     }

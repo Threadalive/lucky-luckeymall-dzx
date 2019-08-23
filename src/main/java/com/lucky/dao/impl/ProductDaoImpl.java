@@ -4,6 +4,8 @@ import com.lucky.dao.ProductDao;
 import com.lucky.entity.Product;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 /**
  * @Description 对产品数据库实现操作的具体dao层。
+ *
  * @Author zhenxing.dong
  * @Date 2019/8/5 00:45
  */
@@ -29,6 +32,11 @@ public class ProductDaoImpl implements ProductDao {
      */
     @Resource
     private HibernateTemplate hibernateTemplate;
+
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductDaoImpl.class);
 
     @Override
     public Product getProduct(int id) {
@@ -51,6 +59,7 @@ public class ProductDaoImpl implements ProductDao {
             hibernateTemplate.delete(hibernateTemplate.load(Product.class, id));
             return true;
         } catch (Exception e) {
+            LOGGER.error("商品删除失败",e.getMessage());
             return false;
         }
     }
@@ -61,6 +70,7 @@ public class ProductDaoImpl implements ProductDao {
             hibernateTemplate.update(product);
             return true;
         } catch (Exception e) {
+            LOGGER.error("商品更新失败",e.getMessage());
             return false;
         }
     }
@@ -84,12 +94,17 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public List<Product> getAllProduct(int offset,int length) {
         List<Product> productList = null;
         //Spring4于Hibernate5之间存在冲突，类型无法转换，这里用Hibernate4
         try {
-            productList = (List<Product>) hibernateTemplate.find("from com.lucky.entity.Product");
+            String hql = "from Product";
+            Query query =  sessionFactory.getCurrentSession().createQuery(hql);
+            query.setFirstResult(offset);
+            query.setMaxResults(length);
+            productList = query.list();
         } catch (Exception e) {
+            LOGGER.error("商品获取失败",e.getMessage());
             e.printStackTrace();
         }
         return productList;
@@ -100,6 +115,14 @@ public class ProductDaoImpl implements ProductDao {
         String hql = "select max(id) from Product";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         Object count = query.list().get(0);
+        return Integer.parseInt(count.toString());
+    }
+
+    @Override
+    public int getProductCount() {
+        String hql = "select count(*) from Product";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        Object count = query.uniqueResult();
         return Integer.parseInt(count.toString());
     }
 }

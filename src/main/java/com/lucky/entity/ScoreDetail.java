@@ -33,9 +33,9 @@ public class ScoreDetail {
      */
     private long createTime;
     /**
-     * 对应商品名
+     * 对应记录描述
      */
-    private String productName;
+    private String itemName;
 
     @Id
     @Column(name = "user_id")
@@ -84,12 +84,12 @@ public class ScoreDetail {
         this.createTime = createTime;
     }
 
-    @Column(name = "product_name")
-    public String getProductName() {
-        return productName;
+    @Column(name = "item_name")
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }

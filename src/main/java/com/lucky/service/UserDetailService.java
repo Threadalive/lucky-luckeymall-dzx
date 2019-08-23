@@ -4,6 +4,12 @@ import com.lucky.entity.UserDetail;
 
 import java.util.List;
 
+/**
+ * @Description 用户详细信息管理的服务类，包括用户详细信息的增删改查。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 11:31
+ */
 public interface UserDetailService {
     /**
      * 根据用户id获取用户细节信息对象。
@@ -17,7 +23,6 @@ public interface UserDetailService {
      * 添加用户信息类对象。
      *
      * @param userDetail 用户细节信息类的对象
-     * @return void
      */
     void addUserDetail(UserDetail userDetail);
 

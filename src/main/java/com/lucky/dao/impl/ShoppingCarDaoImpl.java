@@ -4,6 +4,8 @@ import com.lucky.dao.ShoppingCarDao;
 import com.lucky.entity.ShoppingCar;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,12 +32,19 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
      */
     @Resource
     private HibernateTemplate hibernateTemplate;
+
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCarDaoImpl.class);
+
     @Override
     public ShoppingCar getShoppingCar(int userId, int productId) {
         String hql= "from ShoppingCar where userId=? and productId=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0,userId);
         query.setParameter(1,productId);
+        LOGGER.info("参数设置成功"+userId+'\n'+productId);
         return (ShoppingCar) query.uniqueResult();
     }
 
@@ -46,20 +55,11 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
 
     @Override
     public boolean deleteShoppingCar(int userId, int productId) {
-//        String hql = "from ShoppingCar where userId=? and productId=?";
-//        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-//        query.setParameter(0,userId);
-//        query.setParameter(1,productId);
-//        try {
-//            hibernateTemplate.deleteAll(query.list());
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
         String hql = "delete ShoppingCar where userId=? and productId=?";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter(0, userId);
         query.setParameter(1, productId);
+        LOGGER.info("删除参数设置成功"+userId+'\n'+productId);
         return query.executeUpdate() > 0;
     }
 
@@ -71,7 +71,7 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
             hibernateTemplate.update(shoppingCar);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("购物车更新成功",e.getMessage());
             return false;
         }
     }
@@ -90,6 +90,7 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
             hibernateTemplate.delete(hibernateTemplate.load(ShoppingCar.class, userId));
             return true;
         } catch (Exception e) {
+            LOGGER.error("购物车删除成功",e.getMessage());
             return false;
         }
     }
@@ -100,6 +101,7 @@ public class ShoppingCarDaoImpl implements ShoppingCarDao {
             hibernateTemplate.delete(hibernateTemplate.load(ShoppingCar.class, productId));
             return true;
         } catch (Exception e) {
+            LOGGER.error("商品购物车删除成功",e.getMessage());
             return false;
         }
     }

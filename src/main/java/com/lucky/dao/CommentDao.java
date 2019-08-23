@@ -4,6 +4,12 @@ import com.lucky.entity.Comment;
 
 import java.util.List;
 
+/**
+ * @Description 用户商品评价信息的操作层接口，定义评价信息的增删改查方法。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 22:16
+ */
 public interface CommentDao {
     /**
      * 通过用户id、商品id、创建时间获取指定评价对象

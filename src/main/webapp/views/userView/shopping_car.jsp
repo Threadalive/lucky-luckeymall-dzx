@@ -263,26 +263,17 @@
         for(var i=0;i<productsId.length;i++){
             addToShoppingRecords(productsId[i],productsCounts[i]);
         }
-        <%--layer.msg('支付成功', {icon: 1, title:'支付详情'},--%>
-            <%--function(){--%>
-                <%--window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";--%>
-            <%--},--%>
-            <%--function(index){--%>
-                <%--window.location.href = "${contextPath}/shoppingCar";--%>
-            <%--}--%>
-        <%--);--%>
         addScore();
     }
 
-    function addScore(productId) {
+    function addScore() {
         if(judgeIsLogin()){
-            var product = getProductById(productId);
             var income = parseInt(totalPrice*0.05);
 
             var userScore = {};
             userScore.income = income;
             userScore.userId = '${currentUser.id}';
-            userScore.productName = product.productName;
+            userScore.itemName = '购物车结算';
             $.ajax({
                 async: false,
                 type : 'POST',

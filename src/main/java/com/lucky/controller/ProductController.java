@@ -1,6 +1,7 @@
 package com.lucky.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lucky.entity.PageBean;
 import com.lucky.entity.Product;
 import com.lucky.service.ProductService;
 import com.lucky.util.Response;
@@ -28,9 +29,9 @@ import java.util.Map;
 @RequestMapping("/product")
 public class ProductController {
     /**
-     * logger
+     * LOGGER
      */
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     /**
      * 引用商品管理的服务类。
      */
@@ -84,6 +85,7 @@ public class ProductController {
     @PostMapping(params = "getProductDetail")
     @ResponseBody
     public Map<String, Object> getProductDetail(int id, HttpSession httpSession) {
+        LOGGER.info("根据"+id+"获取商品详情");
         return productService.getProductDetail(id,httpSession);
     }
 
@@ -91,27 +93,31 @@ public class ProductController {
      * 实现商品添加功能。
      *
      * @param product 添加商品的具体对象
+     * @param request 请求
+     * @param file 上传图片
      * @return 商品添加结果
      */
     @PostMapping(params = "addProduct")
     @ResponseBody
     public Map<String, Object> addProduct(Product product, MultipartFile file, HttpServletRequest request) {
-        logger.info(JSONObject.toJSONString(file));
+        LOGGER.info(JSONObject.toJSONString(file));
         return productService.addProduct(product,file,request);
     }
 
 
     /**
-     * 实现商品添加功能。
+     * 实现商品更新功能。
      *
      * @param product 添加商品的具体对象
-     * @return 商品添加结果
+     * @param request 请求
+     * @param file 上传图片
+     * @return 商品更新结果
      */
     @PostMapping(params = "updateProduct")
     @ResponseBody
     public Map<String, Object> updateProduct(Product product, MultipartFile file, HttpServletRequest request) {
         Map<String,Object> resultMap = new HashMap<>();
-        logger.info(JSONObject.toJSONString(file));
+        LOGGER.info(JSONObject.toJSONString(file));
         if(productService.updateProduct(product,file,request)){
             resultMap.put("result","success");
         }else {
@@ -128,6 +134,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public Response deleteProduct(@PathVariable int id) {
+        LOGGER.info("删除id为"+id+"的商品");
         return productService.deleteProduct(id);
     }
 
@@ -142,6 +149,7 @@ public class ProductController {
     @ResponseBody
     public Map<String, Object> searchPre(String searchKeyWord, HttpSession httpSession) {
         httpSession.setAttribute("searchKeyWord", searchKeyWord);
+        LOGGER.info("设置session属性 搜索关键字"+searchKeyWord);
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("result", "success");
         return resultMap;
@@ -169,7 +177,7 @@ public class ProductController {
     @ResponseBody
     public Map<String, Object> searchProductByType(int type) {
         Map<String,Object> resultMap = new HashMap<>();
-
+        LOGGER.info("搜索商品类型为"+type);
         List<Product> productList = productService.getProductsByType(type);
         resultMap.put("result",productList);
         return resultMap;
@@ -183,25 +191,64 @@ public class ProductController {
     @PostMapping(params = "getProductById")
     @ResponseBody
     public Map<String, Object> getProductById(int id) {
+        LOGGER.info("搜索商品id为"+id);
         return productService.getProductById(id);
     }
 
+    /**
+     * 设置要更新商品的id
+     * @param id 商品id
+     * @param httpSession 暂存
+     * @return 设置结果
+     */
     @PostMapping(params = "setId")
     @ResponseBody
-    public Map<String,Object> setUpdateId(int id,HttpSession httpSession){
+    public Map<String,Object> setUpdateProductId(int id, HttpSession httpSession){
         Map<String, Object> resultMap = new HashMap<>();
         httpSession.setAttribute("alterProduct",id);
+        LOGGER.info("session设置要修改的商品id"+id);
         resultMap.put("result", "success");
         return resultMap;
     }
     /**
      * 实现获取全部商品功能。
      *
+     * @param request 请求
      * @return 获取结果
      */
     @PostMapping(params = "getAllProducts")
     @ResponseBody
-    public Map<String, Object> getAllProducts() {
-        return productService.getAllProduct();
+    public PageBean getAllProducts(HttpServletRequest request) {
+        String pageNo = request.getParameter("pageNo");
+        if(pageNo == null){
+            pageNo = "1";
+        }
+        PageBean pageBean = productService.getAllProduct(Integer.valueOf(pageNo), 6);
+        LOGGER.info("当前页"+pageNo);
+        return pageBean;
     }
+    /**
+     * 实现获取全部商品功能。
+     *
+     * @return 获取结果
+     */
+    @PostMapping(params = "getAllProduct")
+    @ResponseBody
+    public PageBean getAllProduct() {
+        int pageSize = productService.count();
+        PageBean pageBean = productService.getAllProduct(1, pageSize);
+        return pageBean;
+    }
+
+    /**
+     * 获取商品数
+     *
+     * @return 商品数
+     */
+    @PostMapping(params = "getProductCount")
+    @ResponseBody
+    public Map<String, Object> getProductCount() {
+        return productService.getProductCount();
+    }
+
 }

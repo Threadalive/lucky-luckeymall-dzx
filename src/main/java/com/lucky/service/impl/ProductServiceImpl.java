@@ -4,11 +4,13 @@ import com.lucky.dao.CommentDao;
 import com.lucky.dao.ProductDao;
 import com.lucky.dao.ShoppingCarDao;
 import com.lucky.dao.ShoppingRecordDao;
+import com.lucky.entity.PageBean;
 import com.lucky.entity.Product;
 import com.lucky.service.ProductService;
 import com.lucky.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +58,11 @@ public class ProductServiceImpl implements ProductService {
      * 用户细节信息管理的服务类.
      */
 
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Override
     public Product getProduct(String productName) {
         return productDao.getProduct(productName);
@@ -69,12 +76,11 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             //通过请求获取文件夹的路径
             String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
-            System.out.println(fileRealPath);
             //根据获取的商品id选取img文件夹下的对应图片的文件名
             int id = productDao.countProduct()+1;
             product.setId(id);
             String imgFileName = String.valueOf(id) + ".jpg";
-            System.out.println(fileRealPath+imgFileName);
+            LOGGER.info("上传路径："+fileRealPath+imgFileName);
             File fileFolder = new File(fileRealPath);
             //若文件夹不存在则创建一个
             if (!fileFolder.exists()) {
@@ -85,13 +91,13 @@ public class ProductServiceImpl implements ProductService {
                 File uploadFile = new File(fileRealPath, imgFileName);
                 file.transferTo(uploadFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("上传失败",e.getMessage());
             }
         productDao.addProduct(product);
         result = "success";
         resultMap.put("result", result);
     }
-    return resultMap;
+        return resultMap;
     }
 
     @Override
@@ -103,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
             productDao.deleteProduct(id);
             return new Response(1, "删除商品成功", null);
         }catch (Exception e){
+            LOGGER.error("删除商品",e.getMessage());
             return new Response(0,"删除商品失败",null);
         }
     }
@@ -113,12 +120,11 @@ public class ProductServiceImpl implements ProductService {
         if (file != null && !file.isEmpty()) {
             //通过请求获取文件夹的路径
             String fileRealPath = request.getSession().getServletContext().getRealPath("/static/img");
-            System.out.println(fileRealPath);
             //根据获取的商品id选取img文件夹下的对应图片的文件名
             int id = product.getId();
             String imgFileName = String.valueOf(id) + ".jpg";
-            System.out.println(fileRealPath+imgFileName);
             File fileFolder = new File(fileRealPath);
+            LOGGER.info("上传路径："+fileRealPath+imgFileName);
             //若文件夹不存在则创建一个
             if (!fileFolder.exists()) {
                 fileFolder.mkdirs();
@@ -132,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
                     file.transferTo(uploadFile);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("更新失败",e.getMessage());
             }
     }
         return productDao.updateProduct(product);
@@ -154,12 +160,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> getAllProduct() {
-        List<Product> productList = new ArrayList<>();
-        productList = productDao.getAllProduct();
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("allProducts", productList);
-        return resultMap;    }
+    public PageBean getAllProduct(int currentPage,int pageSize) {
+        PageBean pageBean = new PageBean();
+        int allRecord = productDao.getProductCount();
+        int offset = pageBean.countOffset(currentPage,pageSize);
+        //调取dao获取对应条数记录
+        List<Product> productList = productDao.getAllProduct(offset,pageSize);
+        pageBean.setPageSize(pageSize);
+        pageBean.setPageNo(currentPage);
+        pageBean.setTotalRecords(allRecord);
+        pageBean.setList(productList);
+        return pageBean;
+    }
 
     @Override
     public Map<String, Object> getProductDetail(int id, HttpSession httpSession) {
@@ -176,5 +188,18 @@ public class ProductServiceImpl implements ProductService {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", product);
         return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getProductCount() {
+        Map<String,Object> resultMap = new HashMap<>();
+        int productCount = productDao.getProductCount();
+        resultMap.put("result",productCount);
+        return resultMap;
+    }
+
+    @Override
+    public int count() {
+        return productDao.getProductCount();
     }
 }

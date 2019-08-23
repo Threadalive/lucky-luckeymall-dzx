@@ -4,6 +4,12 @@ import com.lucky.entity.ShoppingRecord;
 
 import java.util.Map;
 
+/**
+ * @Description 订单记录模块管理的服务类
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/6 11:39
+ */
 public interface ShoppingRecordService {
     /**
      * 根据复合主键查询指定订单
@@ -19,9 +25,10 @@ public interface ShoppingRecordService {
      * 添加记录对象
      *
      * @param shoppingRecord 订单记录对象
+     * @param type 支付方式
      * @return 添加结果
      */
-    Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord);
+    Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord,int type);
 
     /**
      * 根据用户id与产品id删除指定订单记录
@@ -71,4 +78,10 @@ public interface ShoppingRecordService {
      */
     Map<String,Object> getShoppingRecordByOrderStatus(int orderStatus);
 
+    /**
+     * 获取订单数
+     *
+     * @return 用户数
+     */
+    Map<String,Object> getOrderCount();
 }

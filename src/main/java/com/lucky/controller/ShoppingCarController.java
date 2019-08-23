@@ -24,13 +24,16 @@ import java.util.Map;
 @RequestMapping("/shoppingCar")
 public class ShoppingCarController {
 
+    /**
+     * 购物车管理的服务类
+     */
     @Autowired
     ShoppingCarService shoppingCarService;
 
     /**
      * 日志对象
      */
-    private static final Logger logger = LoggerFactory.getLogger(ShoppingCar.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCar.class);
 
     /**
      * 返回给前台购物车页面
@@ -53,11 +56,11 @@ public class ShoppingCarController {
     @PostMapping(params = "addShoppingCar")
     @ResponseBody
     public Map<String,Object> addShoppingCar(ShoppingCar shoppingCar){
-        logger.info("添加的购物车对象用户id为:"+shoppingCar.getUserId());
+        LOGGER.info("添加的购物车对象用户id为:"+shoppingCar.getUserId());
         if (shoppingCar!=null) {
             return shoppingCarService.addShoppingCar(shoppingCar);
         }else {
-            logger.error("传入的购物车信息为空！！！！");
+            LOGGER.error("传入的购物车信息为空！！！！");
             return null;
         }
     }
@@ -71,7 +74,7 @@ public class ShoppingCarController {
     @PostMapping(params = "getShoppingCarById")
     @ResponseBody
     public Map<String,Object> getShoppingCars(int userId){
-        logger.info("通过id"+userId+"查询用户购物车信息");
+        LOGGER.info("通过id"+userId+"查询用户购物车信息");
         return shoppingCarService.getShoppingCars(userId);
     }
 
@@ -84,7 +87,7 @@ public class ShoppingCarController {
     @PostMapping(params = "deleteShoppingCar")
     @ResponseBody
     public Map<String,Object> deleteShoppingCar(int userId,int productId){
-        logger.info("根据用户id与商品id"+userId+" "+productId+"删除购物车信息");
+        LOGGER.info("根据用户id与商品id"+userId+" "+productId+"删除购物车信息");
         return shoppingCarService.deleteShoppingCar(userId,productId);
     }
 }

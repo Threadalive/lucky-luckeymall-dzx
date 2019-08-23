@@ -2,7 +2,8 @@ package com.lucky.controller;
 
 import com.lucky.entity.Comment;
 import com.lucky.service.CommentService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/comment")
 public class CommentController {
+
     /**
      * 评论类的服务类
      */
@@ -29,29 +31,41 @@ public class CommentController {
     /**
      * 日志对象
      */
-    private static final Logger logger = Logger.getLogger(ShoppingCarController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
 
+    /**
+     * 添加评论记录
+     *
+     * @param comment 评论对象
+     * @return 添加结果
+     */
     @PostMapping(params = "addComment")
     @ResponseBody
     public Map<String,Object> addComment(Comment comment){
         if(comment!=null) {
-            logger.info("传入评论为:"+comment.getContent());
+            LOGGER.info("传入评论为:"+comment.getContent());
             return commentService.addComment(comment);
         }else {
-            logger.error("传入评论为空");
+            LOGGER.error("传入评论为空");
             return null;
         }
     }
 
+    /**
+     * 根据商品Id获取评论信息
+     *
+     * @param productId 商品id
+     * @return 获取的指定评论集
+     */
     @PostMapping(params = "getCommentByProductId")
     @ResponseBody
     public Map<String,Object> getCommentByProductId(int productId){
         if(productId!=0) {
-            logger.info("查询商品id为:"+productId);
+            LOGGER.info("查询商品id为:"+productId);
             return commentService.getCommentByProductId(productId);
         }else {
-            logger.error("参数不存在");
+            LOGGER.error("参数不存在");
             return null;
         }
     }

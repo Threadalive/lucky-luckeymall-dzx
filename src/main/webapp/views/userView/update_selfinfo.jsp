@@ -17,7 +17,7 @@
 
 <form id="updateForm" onsubmit="return false">
     <div class="container-fluid">
-        <h1 class="title center" style="color: silver;font-family: fantasy;">个人信息修改</h1>
+        <h1 class="title center" style="color: silver;font-family: fantasy;">个人信息</h1>
         <br/>
         <div class="col-sm-offset-2 col-md-offest-2">
             <!-- 表单输入 -->
@@ -89,6 +89,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="score" class="col-sm-2 col-md-2 control-label">当前积分</label>
+                    <div class="col-sm-6 col-md-6">
+                        <input type="text" class="form-control" id="score" name="score" readonly/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-6">
                         <button class="btn btn-lg btn-primary btn-block" type="submit">确认修改</button>
                     </div>
@@ -119,6 +125,7 @@
         $("#birthday").val(userDetail.birthday);
         $("#postNumber").val(userDetail.postNumber);
         $("#address").val(userDetail.address);
+        $("#score").val(userDetail.score);
         if(userDetail.sex == 0)
             $("#man").checked = true;
         else {

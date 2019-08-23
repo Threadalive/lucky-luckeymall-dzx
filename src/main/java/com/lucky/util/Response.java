@@ -7,10 +7,26 @@ package com.lucky.util;
  */
 public class Response {
 
+    /**
+     * 操作执行状态
+     */
     public int status;
+    /**
+     * 返回信息
+     */
     public String message;
+    /**
+     * 包含内容
+     */
     public Object content;
 
+    /**
+     * 返回信息对象
+     *
+     * @param status 操作执行状态
+     * @param message 返回信息
+     * @param content 包含内容
+     */
     public Response(int status, String message, Object content) {
         this.status = status;
         this.message = message;

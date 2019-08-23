@@ -56,6 +56,7 @@
 
 
 <script>
+    var user1 = '';
     $.validator.setDefaults({
         submitHandler: function () {
             var loading = layer.load(0);
@@ -71,6 +72,7 @@
                 dataType: 'json',
                 success: function (data) {
                     loginResult = data.result;
+                    user1 = data.user1;
                     layer.close(loading);
                 },
                 error: function (data) {
@@ -78,12 +80,10 @@
                 }
             });
             if(loginResult == 'success'){
-                layer.msg('登录成功',{icon:1,time:2000},function(){
-                    window.location.href = "${contextPath}/user?main";
-                });
+                addScore();
             }else if(loginResult == 'admin'){
                 layer.msg('管理员登录',{icon:1,time:2000},function(){
-                    window.location.href = "${contextPath}/user?control";
+                    window.location.href = "/adminControl?control";
                 });
             }
             else if(loginResult == 'nameUnexist'){
@@ -124,4 +124,44 @@
             }
         });
     });
+
+    //登录送10积分
+    function addScore() {
+            var income = 10;
+
+            var userScore = {};
+            userScore.income = income;
+            userScore.userId = user1.id;
+            userScore.itemName = '登录赠送积分';
+            $.ajax({
+                async: false,
+                type : 'POST',
+                url : '${contextPath}/score?addScore',
+                data : userScore,
+                dataType : 'json',
+                success : function(result) {
+                    if(result.result == "success") {
+                        layer.msg('登录成功！用户积分+'+income+'!', {icon: 1},
+                            function () {
+                                window.location.href = "${contextPath}/user?main";
+                            }
+                        );
+                    }
+                    if(result.result == "sameLogin"){
+                        layer.msg('登录成功!', {icon: 1},
+                            function () {
+                                window.location.href = "${contextPath}/user?main";
+                            }
+                        );
+                    }
+                    if(result.result == "fail"){
+                        layer.msg("积分增加出错咯",{icon:5});
+                    }
+                },
+                error : function(result) {
+                    layer.msg('刷新一下试试吧~',{icon:5});
+                }
+            });
+    }
+
 </script>

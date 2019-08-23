@@ -14,7 +14,7 @@
 </head>
 <body>
 <hr/>
-<div class="foot-style">
+<div class="foot-style" style="position:relative;left: 90px;">
     欢迎来到 <a href="${contextPath}/user?main">LuckyMall购物商城</a>
 </div>
 </body>

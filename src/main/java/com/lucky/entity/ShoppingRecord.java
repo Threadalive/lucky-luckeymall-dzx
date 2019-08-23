@@ -4,8 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * @Description 用户购物记录实体类，复合主键：
- * userId、productId与createTime
+ * @Description 用户购物记录实体类，复合主键：userId、productId与createTime
  *
  * @Author zhenxing.dong
  * @Date 2019/8/5 17:11
@@ -95,5 +94,17 @@ public class ShoppingRecord {
 
     public void setCounts(int counts) {
         this.counts = counts;
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingRecord{" +
+                "userId=" + userId +
+                ", productId=" + productId +
+                ", createTime=" + createTime +
+                ", orderStatus=" + orderStatus +
+                ", productPrice=" + productPrice +
+                ", counts=" + counts +
+                '}';
     }
 }

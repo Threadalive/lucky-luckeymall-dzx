@@ -17,7 +17,6 @@ import java.util.Map;
 
 /**
  * @Description 订单记录控制
- *
  * @Author zhenxing.dong
  * @Date 2019/8/7 09:46
  */
@@ -28,7 +27,7 @@ public class ShoppingRecordController {
     /**
      * 日志服务
      */
-    private static final Logger logger = LoggerFactory.getLogger(ShoppingRecordController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingRecordController.class);
 
     /**
      * 订单记录的服务类
@@ -49,18 +48,6 @@ public class ShoppingRecordController {
     }
 
     /**
-     * 返回给前台订单一个订单记录管理页面
-     *
-     * @return 订单记录管理视图
-     */
-    @GetMapping(params = "shoppingRecordHandle")
-    public ModelAndView getShoppingHandle() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("admin/shopping_handle");
-        return view;
-    }
-
-    /**
      * 根据用户id获取订单记录对象，结果以JSON字符串对象返回给前台
      *
      * @param userId 用户id
@@ -68,8 +55,8 @@ public class ShoppingRecordController {
      */
     @PostMapping(params = "getShoppingRecords")
     @ResponseBody
-    public Map<String,Object> getShoppingRecords(int userId){
-        logger.info("传入用户id为:"+userId);
+    public Map<String, Object> getShoppingRecords(int userId) {
+        LOGGER.info("传入用户id为:" + userId);
         return shoppingRecordService.getShoppingRecords(userId);
     }
 
@@ -81,8 +68,8 @@ public class ShoppingRecordController {
      */
     @PostMapping(params = "updateShoppingRecords")
     @ResponseBody
-    public Map<String,Object> updateShoppingRecords(ShoppingRecord shoppingRecord){
-        logger.info("要更新订单记录的用户id为:"+shoppingRecord.getUserId());
+    public Map<String, Object> updateShoppingRecords(ShoppingRecord shoppingRecord) {
+        LOGGER.info("要更新订单记录的用户id为:" + shoppingRecord.getUserId());
         return shoppingRecordService.updateShoppingRecord(shoppingRecord);
     }
 
@@ -90,13 +77,14 @@ public class ShoppingRecordController {
      * 用户下单后添加订单记录项
      *
      * @param shoppingRecord 新的订单记录项
+     * @param type 支付类型
      * @return 添加结果
      */
     @PostMapping(params = "addShoppingRecord")
     @ResponseBody
-    public  Map<String,Object> addShoppingRecord(ShoppingRecord shoppingRecord){
-        logger.info("要添加订单记录的用户id为:"+shoppingRecord.getUserId());
-        return shoppingRecordService.addShoppingRecord(shoppingRecord);
+    public Map<String, Object> addShoppingRecord(ShoppingRecord shoppingRecord, int type) {
+        LOGGER.info("要添加订单记录的用户id为:" + shoppingRecord.getUserId());
+        return shoppingRecordService.addShoppingRecord(shoppingRecord, type);
     }
 
     /**
@@ -107,12 +95,11 @@ public class ShoppingRecordController {
      */
     @PostMapping(params = "getShoppingRecordByOrderStatus")
     @ResponseBody
-    public Map<String,Object> getShoppingRecordByOrderStatus(int orderStatus){
-        logger.info("查询订单的订单状态为:"+orderStatus);
-        if(orderStatus!=0&&orderStatus!=1&&orderStatus!=2){
+    public Map<String, Object> getShoppingRecordByOrderStatus(int orderStatus) {
+        LOGGER.info("查询订单的订单状态为:" + orderStatus);
+        if (orderStatus != 0 && orderStatus != 1 && orderStatus != 2) {
             return null;
-        }else
-            {
+        } else {
             return shoppingRecordService.getShoppingRecordByOrderStatus(orderStatus);
         }
     }
@@ -131,42 +118,54 @@ public class ShoppingRecordController {
     /**
      * 通过用户id和商品id判断订单是否存在
      *
-     * @param userId 用户id
+     * @param userId    用户id
      * @param productId 商品id
      * @return 判断结果
      */
     @PostMapping(params = "getUserProductRecord")
     @ResponseBody
-    public Map<String,Object> getUserProductRecord(int userId,int productId){
-        logger.info("查询订单的用户id与产品id分别是:"+userId+'\n'+productId);
+    public Map<String, Object> getUserProductRecord(int userId, int productId) {
+        LOGGER.info("查询订单的用户id与产品id分别是:" + userId + '\n' + productId);
         String result = "false";
-        if(shoppingRecordService.getUserProductRecord(userId,productId)){
+        if (shoppingRecordService.getUserProductRecord(userId, productId)) {
             result = "true";
         }
-        Map<String,Object> resultMap = new HashMap<String,Object>();
-        resultMap.put("result",result);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("result", result);
         return resultMap;
     }
 
     /**
      * 根据用户id、商品id删除指定订单
      *
-     * @param userId 用户id
+     * @param userId    用户id
      * @param productId 商品id
      * @return 删除结果
      */
     @PostMapping(params = "deleteShoppingRecord")
     @ResponseBody
-    public Map<String,Object> deleteShoppingRecord(int userId, int productId){
-        logger.info("指定订单的用户id与产品id分别是:"+userId+'\n'+productId);
-        Map<String,Object> resultMap = new HashMap<String,Object>();
-        if(shoppingRecordService.deleteShoppingRecord(userId,productId)){
-            resultMap.put("result","success");
-        }else {
-            resultMap.put("result","fail");
+    public Map<String, Object> deleteShoppingRecord(int userId, int productId) {
+        LOGGER.info("指定订单的用户id与产品id分别是:" + userId + '\n' + productId);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (shoppingRecordService.deleteShoppingRecord(userId, productId)) {
+            resultMap.put("result", "success");
+        } else {
+            resultMap.put("result", "fail");
         }
         return resultMap;
     }
+
+    /**
+     * 获取订单总数
+     *
+     * @return 订单总数
+     */
+    @PostMapping(params = "getOrderCount")
+    @ResponseBody
+    public Map<String, Object> getOrderCount() {
+        return shoppingRecordService.getOrderCount();
+    }
+
 }
 
 

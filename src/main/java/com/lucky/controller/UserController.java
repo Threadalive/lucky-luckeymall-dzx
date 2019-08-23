@@ -1,8 +1,10 @@
 package com.lucky.controller;
 
+import com.lucky.entity.PageBean;
 import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
 import com.lucky.service.UserService;
+import com.lucky.util.HttpSenderMain;
 import com.lucky.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -28,7 +31,7 @@ public class UserController {
     /**
      * 日志对象
      */
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     /**
      * 用户服务类，供控制器调用
      */
@@ -49,31 +52,6 @@ public class UserController {
     }
 
     /**
-     * 给前台返回一个控制台页面
-     *
-     * @return 控制台页面
-     */
-    @GetMapping(params = "control")
-    public ModelAndView control(){
-        ModelAndView view=new ModelAndView();
-        view.setViewName("admin/control");
-        return  view;
-    }
-
-    @GetMapping(params = "home")
-    public ModelAndView home(){
-        ModelAndView view=new ModelAndView();
-        view.setViewName("admin/home");
-        return  view;
-    }
-
-    @GetMapping(params = "showUser")
-    public ModelAndView showUser(){
-        ModelAndView view=new ModelAndView();
-        view.setViewName("admin/showUser");
-        return  view;
-    }
-    /**
      * 返回给前台一个个人中心页面
      *
      * @return 个人中心页
@@ -85,13 +63,6 @@ public class UserController {
         return  view;
     }
 
-
-    @GetMapping(params = "alterUserMsg")
-    public ModelAndView alterUserMsg(){
-        ModelAndView view=new ModelAndView();
-        view.setViewName("/admin/alter_user_msg");
-        return  view;
-    }
     /**
      * 获取客户端get请求，参数为register时，返回注册界面视图。
      * 输入URL为：http://127.0.0.1:8080/user?register
@@ -103,13 +74,6 @@ public class UserController {
         ModelAndView view=new ModelAndView();
 
         view.setViewName("/userView/register");
-        return  view;
-    }
-
-    @GetMapping(params = "addUser")
-    public ModelAndView addUser(){
-        ModelAndView view=new ModelAndView();
-        view.setViewName("/admin/add_user");
         return  view;
     }
 
@@ -125,15 +89,35 @@ public class UserController {
     @PostMapping(params = "register")
     @ResponseBody
     public Map<String, Object> doRegister(User vUser,UserDetail vUserDetail){
-        logger.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
+        LOGGER.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
         //参数处理判断
         if(vUser!=null&&vUserDetail!=null) {
             return userService.doRegister(vUser, vUserDetail);
         }else {
-            logger.error("==============传入参数为空==============");
+            LOGGER.error("==============传入参数为空==============");
             return null;
         }
     }
+
+    /**
+     * 短信发送方法
+     *
+     * @param phoneNum 发送的手机号
+     * @return 验证码
+     */
+    @PostMapping(params = "sendMsg")
+    @ResponseBody
+    public Map<String, Object> sengMsg(String phoneNum){
+       Map<String,Object> resultMap = new HashMap<>(1);
+        String num = HttpSenderMain.sendMessage(phoneNum);
+        if("".equals(num)||num == null){
+            resultMap.put("result","fail");
+        }else {
+            resultMap.put("result", num);
+        }
+        return resultMap;
+    }
+
 
     /**
      * 实现用户信息更新的方法，根据用户名判断用户是否
@@ -142,30 +126,33 @@ public class UserController {
      *
      * @param vUser  基本用户参数
      * @param vUserDetail 详细用户参数
+     * @param oldUserName 原先的用户名
      * @return  更新结果
      */
     @PostMapping(params = "updateUser")
     @ResponseBody
     public Map<String,Object> updateUser(User vUser,UserDetail vUserDetail,String oldUserName){
-        logger.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
+        LOGGER.info("=========传入参数："+vUser+"\n"+vUserDetail+"==============");
         return userService.updateUser(vUser,vUserDetail,oldUserName);
     }
 
     /**
-     * 获取所有的用户信息以JSON字符串形式作为值存与Map中返回给前台。
+     * 获取所有的用户信息以页面对象传给前台。
      *
-     * @return 用户对象列表
+     * @param request 请求
+     * @return 用户页面对象
      */
     @PostMapping(params = "getAllUser")
     @ResponseBody
-    public Map<String,Object> getAllUser(){
-        List<User> userList = new ArrayList<>();
-        userList = userService.getAllUser();
+    public PageBean getAllUser(HttpServletRequest request){
+        String pageNo = request.getParameter("pageNo");
+        if(pageNo == null){
+            pageNo = "1";
+        }
+        //指定大小的用户页面对象
+        PageBean pageBean = userService.getAllUser(Integer.valueOf(pageNo), 6);
 
-        Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("allUsers",userList);
-        logger.info("=========取到Map："+resultMap.get("allUsers")+"==============");
-        return resultMap;
+        return pageBean;
     }
 
     /**
@@ -178,7 +165,7 @@ public class UserController {
     @ResponseBody
     public Map<String, Object> getUserById(int id) {
         if(id!=0) {
-            logger.info("传入用户id为:"+id);
+            LOGGER.info("传入用户id为:"+id);
             return userService.getUserById(id);
         }else {
             return null;
@@ -195,25 +182,31 @@ public class UserController {
     @ResponseBody
     public Map<String, Object> getUserByName(String userName) {
         Map<String,Object> resultMap = new HashMap<>();
-        if(userName!=null) {
-            logger.info("传入用户id为:"+userName);
+        if(!"".equals(userName)) {
+            LOGGER.info("传入用户id为:"+userName);
             User user = userService.getUser(userName);
-            resultMap.put("result",user);
+            if(user == null){
+                resultMap.put("result","userNoExist");
+            }else {
+                resultMap.put("result", user);
+            }
             return resultMap;
         }else {
-            return null;
+            resultMap.put("result","listAll");
+            return resultMap;
         }
     }
     /**
      * delete请求控制用户信息的删除，根据URL中传入的参数id，删除对应id的用户。
      * URL如 delete: http://127.0.0.7:8080/user/2，即删除id为2的用户。
      *
+     * @param id 用户id
      * @return 执行状态
      */
     @DeleteMapping("/{id}")
     @ResponseBody
     public Response doDelete(@PathVariable int id){
-        logger.info("传入用户id为:"+id);
+        LOGGER.info("传入用户id为:"+id);
         return userService.deleteUser(id);
     }
 
@@ -226,7 +219,7 @@ public class UserController {
     @PostMapping(params = "getUserAddressAndPhoneNumber")
     @ResponseBody
     public Map<String,Object> getUserAddressAndPhoneNumber(int userId){
-        logger.info("传入用户id为:"+userId);
+        LOGGER.info("传入用户id为:"+userId);
         return userService.getUserAddressAndPhoneNumber(userId);
     }
 
@@ -241,11 +234,17 @@ public class UserController {
     public Map<String,Object> doLogout(HttpSession httpSession){
         Map<String, Object> resultMap = new HashMap<>();
             httpSession.removeAttribute("currentUser");
-            logger.info("用户已退出");
+            LOGGER.info("用户已退出");
             resultMap.put("result", "success");
             return resultMap;
     }
 
+    /**
+     * 记录要修改的用户的id
+     * @param userId 用户id
+     * @param httpSession 暂存对象
+     * @return 暂存结果
+     */
     @PostMapping(params = "setId")
     @ResponseBody
     public Map<String,Object> setUpdateId(int userId,HttpSession httpSession){
@@ -264,7 +263,18 @@ public class UserController {
     @PostMapping(params = "getUserDetailById")
     @ResponseBody
     public Map<String, Object> getUserDetailById(int id) {
-        logger.info("传入用户id为:"+id);
+        LOGGER.info("传入用户id为:"+id);
         return userService.getUserDetailById(id);
+    }
+
+    /**
+     * 获取用户数
+     *
+     * @return 用户数
+     */
+    @PostMapping(params = "getUserCount")
+    @ResponseBody
+    public Map<String, Object> getUserCount() {
+        return userService.getUserCount();
     }
 }

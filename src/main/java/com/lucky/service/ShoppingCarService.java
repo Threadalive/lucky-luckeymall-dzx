@@ -3,7 +3,12 @@ package com.lucky.service;
 import com.lucky.entity.ShoppingCar;
 import java.util.Map;
 
-
+/**
+ * @Description 购物车操作的服务层类
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/12 00:29
+ */
 public interface ShoppingCarService {
     /**
      * 根据用户id、商品id获取购物车对象
@@ -14,9 +19,10 @@ public interface ShoppingCarService {
     Map<String,Object> getShoppingCar(int userId, int productId);
 
     /**
-     * 添加购物车项
+     * 添加购物车
      *
-     * @param shoppingCar 要添加的购物车项
+     * @param shoppingCar 购物车
+     * @return 要添加的购物车项
      */
     Map<String,Object> addShoppingCar(ShoppingCar shoppingCar);
 

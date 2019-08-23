@@ -204,7 +204,7 @@
             unHandleHTML='<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;position: relative;left: 26%;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -236,7 +236,7 @@
             allHTML = '<div class="row">'+
                 '<div class="col-sm-3 col-md-3 col-lg-3"></div> '+
                 '<div class="col-sm-6 col-md-6 col-lg-6">'+
-                '<h2 style="font-family: cursive;">没有相关订单</h2>'+
+                '<h2 style="font-family: cursive;position: relative;left: 20%;">没有相关订单</h2>'+
                 '</div>'+
                 '</div>';
         }
@@ -357,7 +357,7 @@
     }
     // 设置点击收获后更改订单状态
     function receiveProducts(userId,productId,createTime) {
-        layer.confirm('您确定收到货了嘛？',{icon: 3, title:'提示'},function (loading) {
+        layer.confirm('您确定收到货了嘛？',{icon: 3, title:'提示',offset:'center',offset:'250px'},function (loading) {
             var shoppingRecord = {};
             shoppingRecord.userId = userId;
             shoppingRecord.productId = productId;
@@ -370,7 +370,7 @@
                 dataType : 'json',
                 success : function(result) {
                     if(result.result == "success"){
-                        layer.msg('收货成功',{icon:1},function(){
+                        layer.msg('收货成功',{icon:1,offset:'center',offset:'250px'},function(){
                             window.location.href = "${contextPath}/shoppingRecord?showShoppingRecord";
                         });
                         layer.close(loading);

@@ -3,13 +3,28 @@ package com.lucky.entity;
 import java.io.Serializable;
 
 /**
- * @Description 定义购物记录表的符合主键
+ * @Description 定义购物记录表的符合主键。
  * @Author zhenxing.dong
  * @Date 2019/8/7 09:11
  */
 public class ShoppingRecordPK implements Serializable {
+    /**
+     * 种子
+     */
+    private final static int SALT = 31;
+    /**
+     * 用户id
+     */
     private int userId;
+
+    /**
+     * 商品id
+     */
     private int productId;
+
+    /**
+     * 创建时间
+     */
     private long createTime;
 
 
@@ -40,19 +55,28 @@ public class ShoppingRecordPK implements Serializable {
     @Override
     public int hashCode() {
         int result = getUserId();
-        result = 31 * result + getProductId();
-        return result;    }
+        result = SALT * result + getProductId();
+        return result;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ShoppingRecordPK)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ShoppingRecordPK)) {
+            return false;
+        }
 
         ShoppingRecordPK that = (ShoppingRecordPK) obj;
 
-        if (getUserId() != that.getUserId()) return false;
-        if (getProductId() != that.getProductId()) return false;
-        return getCreateTime()== (that.getCreateTime());
+        if (getUserId() != that.getUserId()) {
+            return false;
+        }
+        if (getProductId() != that.getProductId()) {
+            return false;
+        }
+        return getCreateTime() == (that.getCreateTime());
     }
 
 }

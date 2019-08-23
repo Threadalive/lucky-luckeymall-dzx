@@ -4,6 +4,8 @@ import com.lucky.dao.UserDao;
 import com.lucky.entity.User;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +33,10 @@ public class UserDaoImpl implements UserDao {
     @Resource
     private HibernateTemplate hibernateTemplate;
 
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @Override
     public void addUser(User user) {
@@ -44,6 +50,7 @@ public class UserDaoImpl implements UserDao {
         query.setParameter(0, nameOrEmail);
         if(query.uniqueResult() == null){
             //若通过邮箱查询不到用户，则使用用户名再次查询
+            LOGGER.info("无该邮箱");
             hql = "from User where userName=?";
             query = sessionFactory.getCurrentSession().createQuery(hql);
             query.setParameter(0, nameOrEmail);
@@ -62,6 +69,7 @@ public class UserDaoImpl implements UserDao {
             hibernateTemplate.delete(hibernateTemplate.load(User.class, id));
             return true;
         } catch (Exception e) {
+            LOGGER.error("删除用户失败",e.getMessage());
             return false;
         }
     }
@@ -76,20 +84,33 @@ public class UserDaoImpl implements UserDao {
             hibernateTemplate.update(user1);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("更新用户失败",e.getMessage());
             return false;
         }
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getAllUser(int offset,int length) {
         List<User> userList = null;
         //Spring4于Hibernate5之间存在冲突，类型无法转换，这里用Hibernate4
         try {
-            userList = (List<User>) hibernateTemplate.find("from com.lucky.entity.User");
+            String hql = "from User";
+            Query query =  sessionFactory.getCurrentSession().createQuery(hql);
+            //设置页面起始记录和截止记录位置
+            query.setFirstResult(offset);
+            query.setMaxResults(length);
+            userList = query.list();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("获取用户失败",e.getMessage());
         }
         return userList;
+    }
+
+    @Override
+    public int getUserCount() {
+        String hql = "select count(*) from User";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        Object count = query.uniqueResult();
+        return Integer.parseInt(count.toString());
     }
 }

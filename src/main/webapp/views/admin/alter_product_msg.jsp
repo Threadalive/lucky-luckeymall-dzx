@@ -18,8 +18,8 @@
     <h1 ><a style="color: dimgrey;font-family: cursive;" name="section3">编辑商品信息</a></h1>
     <hr/>
     <div class="col-sm-offset-2 col-md-offest-2">
-        <div>
-            <img src="${contextPath}/img/${sessionScope.alterProduct}.jpg" style="width: 400px;position: relative;top: 50px;right: 120px">
+        <div style="width: 300px;height: 400px">
+            <img src="${contextPath}/img/${sessionScope.alterProduct}.jpg" style="width: 400px;height:500px;position: relative;top: 50px;right: 120px">
         </div>
         <!-- 表单输入 -->
         <div  class="form-horizontal" style="position: relative;left: 240px;bottom: 350px">

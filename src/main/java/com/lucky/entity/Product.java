@@ -1,7 +1,5 @@
 package com.lucky.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -43,8 +41,6 @@ public class Product {
      */
     private int type;
 
-//    @GenericGenerator(name = "generator", strategy = "increment") //设置主键自增
-//    @GeneratedValue(generator = "generator")
     @Id
     @Column(name = "id")
     public int getId() {

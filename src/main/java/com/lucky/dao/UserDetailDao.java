@@ -4,6 +4,12 @@ import com.lucky.entity.UserDetail;
 
 import java.util.List;
 
+/**
+ * @Description 用户详细信息的操作层接口，定义用户详细信息的增删改查方法。
+ *
+ * @Author zhenxing.dong
+ * @Date 2019/8/2 22:16
+ */
 public interface UserDetailDao {
 
     /**
@@ -18,7 +24,6 @@ public interface UserDetailDao {
      * 添加用户信息对象。
      *
      * @param userDetail 用户信息对象
-     * @return void
      */
     void addUserDetail(UserDetail userDetail);
 
@@ -46,8 +51,10 @@ public interface UserDetailDao {
     List<UserDetail> getAllUserDetail();
 
     /**
-     * 更新用户积分
+     * boolean true:更新成功 false:更新失败
      *
+     * @param userId 用户id
+     * @param score 积分
      * @return boolean true:更新成功 false:更新失败
      */
     boolean updateUserScore(int userId,int score);

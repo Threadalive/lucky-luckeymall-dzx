@@ -369,8 +369,8 @@
             }
         });
         if(sendResult == "success"){
-            layer.msg('发货成功',{icon:1},function () {
-                window.location.href = "${contextPath}/shoppingRecord?shoppingRecordHandle";
+            layer.msg('发货成功',{icon:1,offset: '250px'},function () {
+                window.location.href = "${contextPath}/adminControl?shoppingRecordHandle";
             });
         }
 

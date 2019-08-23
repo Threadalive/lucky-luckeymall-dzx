@@ -1,10 +1,11 @@
 package com.lucky.dao.impl;
 
 import com.lucky.dao.UserDetailDao;
-import com.lucky.entity.User;
 import com.lucky.entity.UserDetail;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +33,11 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Resource
     private HibernateTemplate hibernateTemplate;
 
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailDaoImpl.class);
+
     @Override
     public UserDetail getUserDetail(int id) {
         return hibernateTemplate.get(UserDetail.class,id);
@@ -48,6 +54,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
             hibernateTemplate.delete(hibernateTemplate.load(UserDetail.class, id));
             return true;
         } catch (Exception e) {
+            LOGGER.error("删除用户失败",e.getMessage());
             return false;
         }
     }
@@ -55,6 +62,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Override
     public boolean updateUserDetail(UserDetail userDetail) {
         try {
+            //更新用户详细信息
             UserDetail userDetail1 = hibernateTemplate.get(UserDetail.class,userDetail.getId());
             userDetail1.setSex(userDetail.getSex());
             userDetail1.setAddress(userDetail.getAddress());
@@ -65,6 +73,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
             hibernateTemplate.update(userDetail1);
             return true;
         } catch (Exception e) {
+            LOGGER.error("更新用户失败",e.getMessage());
             return false;
         }
     }
@@ -77,7 +86,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
             hibernateTemplate.update(user);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("更新用户积分失败",e.getMessage());
             return false;
         }
     }
@@ -90,7 +99,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
         try {
             userDetailsList = (List<UserDetail>) hibernateTemplate.find("from com.lucky.entity.UserDetail");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("获取用户失败",e.getMessage());
         }
         return userDetailsList;
     }

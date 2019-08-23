@@ -24,6 +24,18 @@
     <mvc:resources location="/static/img/" mapping="/img/**"/>
     <mvc:resources location="/static/bgimg/" mapping="/bgimg/**"/>
     <mvc:resources location="/static/css/" mapping="/css/**"/>
+    <mvc:resources location="/static/errorpage/" mapping="/errorpage/**"/>
+
+
+    <mvc:interceptors>
+        <!--  使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求   -->
+        <!-- <bean class="com.bybo.aca.web.interceptor.Login"/> -->
+        <mvc:interceptor>
+            <mvc:mapping path="/adminControl" />
+            <mvc:exclude-mapping path="/error/*" />
+            <bean class="com.lucky.util.AuthorityInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!-- 文件上传配置 -->
     <bean id="multipartResolver"
